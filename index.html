@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis</title>
+    <style id="force-scrollbars">
+      /* Override the app's scrollbar-hide utility so overflow is visible. */
+      .scrollbar-hide { scrollbar-width: thin !important; -ms-overflow-style: auto !important; }
+      *::-webkit-scrollbar,
+      .scrollbar-hide::-webkit-scrollbar { display: block !important; width: 12px !important; height: 12px !important; }
+      *::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.06) !important; }
+      *::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.55) !important; border-radius: 6px !important; }
+      *::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8) !important; }
+    </style>
+    <script>
+      // Start each session clean: drop any persisted "Plan My Day" synced focus
+      // blocks so the calendar shows no "Synced from plan" entries until the
+      // user actually runs Plan My Day and syncs. Runs before the app loads.
+      try { localStorage.removeItem('jarvis.calendar.syncedFocus.v1'); } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
