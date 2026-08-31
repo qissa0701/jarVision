@@ -69,7 +69,7 @@ export function DecisionGateView({
         <VisionSection
           title={`${gate} decision recorded`}
           description="This decision is logged to the auditable Decision Log."
-          icon={<Gavel className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
+          icon={<Gavel className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
           right={<StageBadge label={decision.decision.toUpperCase()} tone={DECISION_TONE[decision.decision]} />}
         >
           <dl className="space-y-2 text-xs">
@@ -88,7 +88,7 @@ export function DecisionGateView({
     <div className="space-y-4">
       <VisionSection
         title={`${gate} decision — awaiting human Go / No-go`}
-        description={`Decision authority: ${decider}. VISION prepares and presents; the human decides.`}
+        description={`Decision authority: ${decider}. jarVision prepares and presents; the human decides.`}
         icon={<ShieldAlert className="w-4 h-4 text-amber-500" />}
         right={<StageBadge label={`Awaiting ${gate} decision`} tone="amber" />}
       >
@@ -112,7 +112,7 @@ export function DecisionGateView({
             {gate === "G0"
               ? "No seed funding is released and no PoC starts until a human records an explicit Go."
               : "Nothing enters execution until a human records an explicit Go."}{" "}
-            VISION never auto-approves.
+            jarVision never auto-approves.
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export function DecisionGateView({
                 aria-pressed={choice === o.kind}
                 className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition-colors ${
                   choice === o.kind
-                    ? "bg-indigo-600 text-white border-indigo-600"
+                    ? "bg-blue-600 text-white border-blue-600"
                     : "bg-card text-foreground border-border hover:bg-muted"
                 }`}
               >
@@ -145,7 +145,7 @@ export function DecisionGateView({
               value={maker}
               onChange={(e) => setMaker(e.target.value)}
               placeholder={decider}
-              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400/30"
+              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400/30"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -155,7 +155,7 @@ export function DecisionGateView({
               onChange={(e) => setRationale(e.target.value)}
               rows={3}
               placeholder="Why this decision? Recorded to the Decision Log for auditability."
-              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400/30 resize-none"
+              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400/30 resize-none"
             />
           </label>
           <div>

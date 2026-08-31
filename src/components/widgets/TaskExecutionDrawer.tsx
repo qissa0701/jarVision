@@ -66,10 +66,10 @@ export function TaskExecutionDrawer({
       <div className="flex items-start justify-between px-5 py-4 border-b border-border">
         <div className="flex-1 min-w-0 pr-3">
           <div className="flex items-center gap-2 mb-1.5">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center flex-shrink-0">
               <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-300 tracking-wide">
+            <span className="text-xs font-bold text-blue-600 dark:text-blue-300 tracking-wide">
               EXECUTE WITH JARVIS
             </span>
           </div>
@@ -91,7 +91,7 @@ export function TaskExecutionDrawer({
         {/* Execute now */}
         <section className="p-4 rounded-xl border border-border bg-muted">
           <div className="flex items-center gap-2 mb-1.5">
-            <Play className="w-4 h-4 text-indigo-600 dark:text-indigo-300" />
+            <Play className="w-4 h-4 text-blue-600 dark:text-blue-300" />
             <h4 className="text-sm font-semibold text-foreground">Execute now</h4>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed mb-3">
@@ -100,7 +100,7 @@ export function TaskExecutionDrawer({
           <button
             type="button"
             onClick={handleExecuteNow}
-            className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors"
+            className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
           >
             <Play className="w-3.5 h-3.5" />
             Execute now
@@ -110,7 +110,7 @@ export function TaskExecutionDrawer({
         {/* Schedule execution */}
         <section className="p-4 rounded-xl border border-border bg-muted">
           <div className="flex items-center gap-2 mb-1.5">
-            <CalendarClock className="w-4 h-4 text-indigo-600 dark:text-indigo-300" />
+            <CalendarClock className="w-4 h-4 text-blue-600 dark:text-blue-300" />
             <h4 className="text-sm font-semibold text-foreground">Schedule execution</h4>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed mb-3">
@@ -124,12 +124,12 @@ export function TaskExecutionDrawer({
             type="time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
-            className="mt-1 w-full px-3 py-2 rounded-xl border border-border text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400/30 focus:border-indigo-300 dark:focus:border-indigo-400/50"
+            className="mt-1 w-full px-3 py-2 rounded-xl border border-border text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400/30 focus:border-blue-300 dark:focus:border-blue-400/50"
           />
           <button
             type="button"
             onClick={handleSchedule}
-            className="mt-3 w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-100 dark:border-indigo-400/20 hover:border-indigo-200 dark:hover:border-indigo-400/30 transition-colors"
+            className="mt-3 w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-100 dark:border-blue-400/20 hover:border-blue-200 dark:hover:border-blue-400/30 transition-colors"
           >
             <CalendarClock className="w-3.5 h-3.5" />
             Schedule

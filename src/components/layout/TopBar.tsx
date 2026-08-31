@@ -31,7 +31,7 @@ const KIND_ACCENT: Record<Notification["kind"], string> = {
   high: "bg-amber-500",
   medium: "bg-blue-500",
   warning: "bg-amber-500",
-  info: "bg-indigo-500",
+  info: "bg-blue-500",
   success: "bg-green-500",
 };
 
@@ -89,11 +89,11 @@ export function TopBar({
         <button
           type="button"
           onClick={onEnterVision}
-          aria-label="Enter VISION Studio"
-          className="hidden sm:inline-flex items-center gap-1.5 h-9 pl-2.5 pr-3.5 rounded-xl text-xs font-bold border border-indigo-200 dark:border-indigo-400/30 text-indigo-700 dark:text-indigo-300 bg-indigo-50/60 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors"
+          aria-label="Enter jarVision"
+          className="hidden sm:inline-flex items-center gap-1.5 h-9 pl-2.5 pr-3.5 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-400/30 text-blue-700 dark:text-blue-300 bg-blue-50/60 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors"
         >
           <Eye className="w-4 h-4" />
-          VISION Studio
+          jarVision
         </button>
         {/* Jarvis chat toggle. Styled as a filled, gradient "brand" pill
             (rather than a plain icon button like the theme/bell toggles) so
@@ -110,8 +110,8 @@ export function TopBar({
           aria-label={chatOpen ? "Close Jarvis Assistant" : "Open Jarvis Assistant"}
           className={`relative flex items-center gap-1.5 h-9 pl-2.5 pr-3.5 rounded-xl text-xs font-bold shadow-sm transition-all ${
             chatOpen
-              ? "bg-indigo-700 dark:bg-indigo-600 text-white"
-              : "bg-gradient-to-br from-indigo-600 to-indigo-500 dark:from-indigo-500 dark:to-indigo-400 text-white hover:from-indigo-700 hover:to-indigo-600 dark:hover:from-indigo-600 dark:hover:to-indigo-500 hover:shadow-md"
+              ? "bg-blue-700 dark:bg-blue-600 text-white"
+              : "bg-gradient-to-br from-blue-600 to-blue-500 dark:from-blue-500 dark:to-blue-400 text-white hover:from-blue-700 hover:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-500 hover:shadow-md"
           }`}
         >
           <Sparkles className="w-4 h-4" />
@@ -167,7 +167,7 @@ export function TopBar({
               >
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                   <span className="text-sm font-semibold text-foreground">Notifications</span>
-                  <span className="text-[11px] font-bold px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 rounded-full">
+                  <span className="text-[11px] font-bold px-1.5 py-0.5 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 rounded-full">
                     {count}
                   </span>
                 </div>

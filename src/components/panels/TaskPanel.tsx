@@ -98,11 +98,11 @@ function ToolChip({
   tone = "muted",
 }: {
   tool: string;
-  tone?: "muted" | "indigo" | "amber";
+  tone?: "muted" | "blue" | "amber";
 }) {
   const toneClasses =
-    tone === "indigo"
-      ? "bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-400/20"
+    tone === "blue"
+      ? "bg-blue-100 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-400/20"
       : tone === "amber"
         ? "bg-amber-100 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-400/20"
         : "bg-muted text-muted-foreground border-border";
@@ -121,7 +121,7 @@ function ToolChip({
  * `buildStepReasoning` for one step, rendered so it reads as Jarvis narrating
  * its own actions in real time (mirrors the `motion.div` stagger already
  * used in the planning step list). Three tones:
- *   • "active" — the step executing right now: indigo-tinted, staggered in.
+ *   • "active" — the step executing right now: blue-tinted, staggered in.
  *   • "paused" — the step a Stop interrupted mid-flight: amber-tinted, static
  *     (no further lines will arrive), signalling "this is where it stopped".
  *   • "done"   — an already-completed step: muted/plain, no box, so the full
@@ -152,12 +152,12 @@ function ReasoningTrace({
 
   const boxClasses =
     tone === "active"
-      ? "bg-indigo-50/70 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-400/20"
+      ? "bg-blue-50/70 dark:bg-blue-500/10 border-blue-100 dark:border-blue-400/20"
       : "bg-amber-50/70 dark:bg-amber-500/10 border-amber-100 dark:border-amber-400/20";
   const textClasses =
-    tone === "active" ? "text-indigo-700 dark:text-indigo-300" : "text-amber-700 dark:text-amber-300";
+    tone === "active" ? "text-blue-700 dark:text-blue-300" : "text-amber-700 dark:text-amber-300";
   const iconClasses =
-    tone === "active" ? "text-indigo-500 dark:text-indigo-400" : "text-amber-500 dark:text-amber-400";
+    tone === "active" ? "text-blue-500 dark:text-blue-400" : "text-amber-500 dark:text-amber-400";
 
   return (
     <div className={`mt-2 space-y-1 rounded-lg border px-2.5 py-2 ${boxClasses}`}>
@@ -179,7 +179,7 @@ function ReasoningTrace({
 
 /** Shared textarea styling for the optional/re-run instructions inputs. */
 const INSTRUCTIONS_TEXTAREA_CLASSES =
-  "w-full text-xs p-2.5 rounded-xl border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-400/40 focus:border-indigo-300 dark:focus:border-indigo-400/50 placeholder:text-muted-foreground resize-none";
+  "w-full text-xs p-2.5 rounded-xl border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40 focus:border-blue-300 dark:focus:border-blue-400/50 placeholder:text-muted-foreground resize-none";
 
 export function TaskPanel({
   task,
@@ -253,13 +253,13 @@ export function TaskPanel({
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0 pr-3">
             <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </div>
               {/* State-aware badge (Requirement: header state badge). */}
               {isExecuting ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-300 tracking-wide">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-300 tracking-wide">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                   JARVIS EXECUTING
                 </span>
               ) : isStoppedState ? (
@@ -273,7 +273,7 @@ export function TaskPanel({
                   EXECUTION COMPLETE
                 </span>
               ) : (
-                <span className="text-xs font-bold text-indigo-600 dark:text-indigo-300 tracking-wide">
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-300 tracking-wide">
                   JARVIS PLAN
                 </span>
               )}
@@ -290,7 +290,7 @@ export function TaskPanel({
               >
                 {task.due}
               </span>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-semibold">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 font-semibold">
                 {task.category}
               </span>
               <span className="text-[11px] text-muted-foreground">
@@ -319,7 +319,7 @@ export function TaskPanel({
               aria-label="Execution progress"
             >
               <motion.div
-                className={`h-full rounded-full ${isDoneState ? "bg-emerald-500 dark:bg-emerald-400" : isStoppedState ? "bg-amber-500 dark:bg-amber-400" : "bg-indigo-600 dark:bg-indigo-400"}`}
+                className={`h-full rounded-full ${isDoneState ? "bg-emerald-500 dark:bg-emerald-400" : isStoppedState ? "bg-amber-500 dark:bg-amber-400" : "bg-blue-600 dark:bg-blue-400"}`}
                 initial={false}
                 animate={{ width: `${progressPct}%` }}
                 transition={{ type: "spring", stiffness: 200, damping: 30 }}
@@ -327,7 +327,7 @@ export function TaskPanel({
             </div>
             <div className="flex items-center justify-between">
               <span
-                className={`text-[11px] font-semibold ${isDoneState ? "text-emerald-600 dark:text-emerald-300" : isStoppedState ? "text-amber-600 dark:text-amber-300" : "text-indigo-600 dark:text-indigo-300"}`}
+                className={`text-[11px] font-semibold ${isDoneState ? "text-emerald-600 dark:text-emerald-300" : isStoppedState ? "text-amber-600 dark:text-amber-300" : "text-blue-600 dark:text-blue-300"}`}
               >
                 {isStoppedState
                   ? `Stopped after step ${completedCount} of ${totalSteps}`
@@ -358,7 +358,7 @@ export function TaskPanel({
                   className="flex gap-3"
                 >
                   <div className="flex flex-col items-center flex-shrink-0">
-                    <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-500/15 flex items-center justify-center text-[11px] font-bold text-indigo-600 dark:text-indigo-300">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-500/15 flex items-center justify-center text-[11px] font-bold text-blue-600 dark:text-blue-300">
                       {step.num}
                     </div>
                     {i < totalSteps - 1 && (
@@ -427,7 +427,7 @@ export function TaskPanel({
                   <div key={step.num} className="flex gap-3">
                     <div className="flex flex-col items-center flex-shrink-0">
                       <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 ${isDone ? "bg-emerald-500 dark:bg-emerald-500/90" : isActive ? "bg-indigo-600 dark:bg-indigo-500 ring-4 ring-indigo-100 dark:ring-indigo-500/15" : isPaused ? "bg-amber-500 dark:bg-amber-500/90 ring-4 ring-amber-100 dark:ring-amber-500/15" : "bg-muted"}`}
+                        className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 ${isDone ? "bg-emerald-500 dark:bg-emerald-500/90" : isActive ? "bg-blue-600 dark:bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-500/15" : isPaused ? "bg-amber-500 dark:bg-amber-500/90 ring-4 ring-amber-100 dark:ring-amber-500/15" : "bg-muted"}`}
                       >
                         {isDone ? (
                           <CheckCircle className="w-3.5 h-3.5 text-white" />
@@ -462,9 +462,9 @@ export function TaskPanel({
                             repeat: Infinity,
                             ease: "easeInOut",
                           }}
-                          className="-mx-2 px-2 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-400/20"
+                          className="-mx-2 px-2 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-400/20"
                         >
-                          <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">
+                          <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">
                             {step.title}
                           </p>
                           <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -472,7 +472,7 @@ export function TaskPanel({
                               Working…
                             </span>
                             {step.tool && (
-                              <ToolChip tool={step.tool} tone="indigo" />
+                              <ToolChip tool={step.tool} tone="blue" />
                             )}
                           </div>
                           {/* "Thinking out loud" reasoning trace for the active step. */}
@@ -582,7 +582,7 @@ export function TaskPanel({
                   type="button"
                   onClick={() => onExecute(rerunDraft)}
                   disabled={!rerunDraft.trim()}
-                  className="mt-2 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="mt-2 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Play className="w-3 h-3" />
                   Re-run with this input
@@ -599,7 +599,7 @@ export function TaskPanel({
           <>
             <button
               onClick={() => onExecute(planningDraft)}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shadow-indigo-200 dark:shadow-none"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
             >
               <Play className="w-4 h-4" />
               Execute this for me
@@ -612,8 +612,8 @@ export function TaskPanel({
         )}
         {isExecuting && (
           <>
-            <div className="flex-1 flex items-center justify-center gap-2.5 py-2.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 text-sm font-bold rounded-xl">
-              <div className="w-4 h-4 rounded-full border-2 border-indigo-300 dark:border-indigo-400/50 border-t-transparent animate-spin" />
+            <div className="flex-1 flex items-center justify-center gap-2.5 py-2.5 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 text-sm font-bold rounded-xl">
+              <div className="w-4 h-4 rounded-full border-2 border-blue-300 dark:border-blue-400/50 border-t-transparent animate-spin" />
               Step {Math.min(executingStep + 1, totalSteps)} of {totalSteps}…
             </div>
             {/* Human-in-the-loop interrupt: always reachable while executing. */}
@@ -633,7 +633,7 @@ export function TaskPanel({
             <button
               type="button"
               onClick={() => onExecute()}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shadow-indigo-200 dark:shadow-none"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
             >
               <Play className="w-4 h-4" />
               Resume

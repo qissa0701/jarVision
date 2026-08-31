@@ -67,7 +67,7 @@ function MessageBubble({
         <div
           className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
             isUser
-              ? "bg-indigo-600 dark:bg-indigo-500 text-white rounded-br-md"
+              ? "bg-blue-600 dark:bg-blue-500 text-white rounded-br-md"
               : "bg-muted text-foreground rounded-bl-md"
           }`}
         >
@@ -188,7 +188,7 @@ export function ChatPanel({
       {/* Header */}
       <div className="flex items-start justify-between px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-3.5 h-3.5 text-white" />
           </div>
           <h3
@@ -205,7 +205,7 @@ export function ChatPanel({
             disabled={!voiceMode.isSupported || recognition.isListening}
             title={voiceModeTitle}
             aria-label={voiceModeTitle}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <AudioLines className="w-3.5 h-3.5" />
             Voice Mode
@@ -240,7 +240,7 @@ export function ChatPanel({
         {isThinking && (
           <div className="flex justify-start">
             <div className="px-3.5 py-2.5 rounded-2xl rounded-bl-md bg-muted text-muted-foreground text-xs italic flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-500 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 dark:bg-blue-500 animate-pulse" />
               Jarvis is typing…
             </div>
           </div>
@@ -250,8 +250,8 @@ export function ChatPanel({
       {/* Listening indicator */}
       {recognition.isListening && (
         <div className="px-4 pb-1">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-blue-600 dark:text-blue-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             Listening…
           </span>
         </div>
@@ -268,8 +268,8 @@ export function ChatPanel({
           aria-pressed={recognition.isListening}
           className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 border transition-colors ${
             recognition.isListening
-              ? "bg-indigo-600 dark:bg-indigo-500 text-white border-indigo-600 dark:border-indigo-500"
-              : "text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 border-indigo-100 dark:border-indigo-400/20 hover:bg-indigo-100 dark:hover:bg-indigo-500/20"
+              ? "bg-blue-600 dark:bg-blue-500 text-white border-blue-600 dark:border-blue-500"
+              : "text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 border-blue-100 dark:border-blue-400/20 hover:bg-blue-100 dark:hover:bg-blue-500/20"
           } disabled:opacity-40 disabled:cursor-not-allowed`}
         >
           {recognition.isSupported ? (
@@ -293,14 +293,14 @@ export function ChatPanel({
             }
           }}
           placeholder="Message Jarvis…"
-          className="flex-1 px-3.5 py-2 text-sm bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-400/40 focus:border-indigo-300 dark:focus:border-indigo-400/50 placeholder:text-muted-foreground transition"
+          className="flex-1 px-3.5 py-2 text-sm bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40 focus:border-blue-300 dark:focus:border-blue-400/50 placeholder:text-muted-foreground transition"
         />
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!draft.trim()}
           aria-label="Send message"
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
         >
           <Send className="w-4 h-4" />
         </button>

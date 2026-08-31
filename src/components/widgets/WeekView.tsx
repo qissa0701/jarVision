@@ -33,7 +33,7 @@ export function WeekView({ meetingsByWeekday, onSelectMeeting }: WeekViewProps) 
                   key={meeting.id}
                   type="button"
                   onClick={() => onSelectMeeting?.(meeting)}
-                  className="w-full text-left p-2 rounded-lg bg-card border border-border hover:border-indigo-100 dark:hover:border-indigo-400/20 hover:shadow-sm transition-all cursor-pointer"
+                  className="w-full text-left p-2 rounded-lg bg-card border border-border hover:border-blue-100 dark:hover:border-blue-400/20 hover:shadow-sm transition-all cursor-pointer"
                 >
                   <p className="text-[11px] font-semibold text-foreground leading-snug">
                     {meeting.title}

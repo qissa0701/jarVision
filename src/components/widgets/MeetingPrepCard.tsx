@@ -46,7 +46,7 @@ export function MeetingPrepCard({
   const talkingPoints = buildTalkingPoints(meeting);
 
   return (
-    <div className="rounded-xl bg-card border border-border hover:border-indigo-100 dark:hover:border-indigo-400/20 hover:shadow-sm transition-all overflow-hidden">
+    <div className="rounded-xl bg-card border border-border hover:border-blue-100 dark:hover:border-blue-400/20 hover:shadow-sm transition-all overflow-hidden">
       <div className="flex items-start gap-2 p-3">
         <button
           type="button"
@@ -68,7 +68,7 @@ export function MeetingPrepCard({
             <span
               className={`text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${
                 meeting.type === "video"
-                  ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300"
+                  ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300"
                   : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300"
               }`}
             >
@@ -85,7 +85,7 @@ export function MeetingPrepCard({
           onClick={() => setExpanded((e) => !e)}
           aria-expanded={expanded}
           aria-controls={prepPanelId}
-          className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-100 dark:border-indigo-400/20 transition-colors"
+          className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-100 dark:border-blue-400/20 transition-colors"
         >
           <Sparkles className="w-3 h-3" />
           {expanded ? "Hide prep" : "Prep"}
@@ -177,7 +177,7 @@ function PrepDraftSection({
         <button
           type="button"
           onClick={() => onDraft(meeting)}
-          className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-100 dark:border-indigo-400/20 hover:border-indigo-200 dark:hover:border-indigo-400/30 transition-colors"
+          className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-100 dark:border-blue-400/20 hover:border-blue-200 dark:hover:border-blue-400/30 transition-colors"
         >
           <Sparkles className="w-3 h-3" />
           Draft talking points
@@ -197,7 +197,7 @@ function PrepDraftSection({
           value={draftState.text}
           onChange={(e) => onEditDraft(meeting, e.target.value)}
           rows={5}
-          className="mt-1 w-full text-[12px] p-2 rounded-lg border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-400/40 focus:border-indigo-300 dark:focus:border-indigo-400/50"
+          className="mt-1 w-full text-[12px] p-2 rounded-lg border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40 focus:border-blue-300 dark:focus:border-blue-400/50"
         />
         <div className="flex items-center gap-2 mt-2">
           <button

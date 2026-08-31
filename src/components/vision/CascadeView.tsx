@@ -40,7 +40,7 @@ export function CascadeView({
       <VisionSection
         title="Approve & cascade"
         description="Endorse the recommended use case as a G0 candidate, then push role-specific action items into the org."
-        icon={<GitBranch className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
+        icon={<GitBranch className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
         right={approved ? <StageBadge label="Approved & cascaded" tone="green" /> : undefined}
       >
         <div className="rounded-xl bg-muted p-3 mb-4">
@@ -56,10 +56,10 @@ export function CascadeView({
         </div>
 
         {!approved ? (
-          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-400/20">
-            <ShieldCheck className="w-4 h-4 text-indigo-500 dark:text-indigo-300 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-400/20">
+            <ShieldCheck className="w-4 h-4 text-blue-500 dark:text-blue-300 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-[12px] text-indigo-700 dark:text-indigo-300 leading-relaxed">
+              <p className="text-[12px] text-blue-700 dark:text-blue-300 leading-relaxed">
                 <span className="font-semibold">Human-in-the-loop.</span> Nothing is cascaded until you
                 approve. Approving creates {journey.cascade.length} role-scoped action items with full
                 context and traceability back to this simulation.
@@ -81,7 +81,7 @@ export function CascadeView({
               {cascadeItems.map((c) => (
                 <li key={c.id} className="rounded-xl border border-border bg-muted/40 p-3">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                    <span className="text-xs font-bold text-blue-700 dark:text-blue-300">
                       {c.targetRole}
                     </span>
                     <StageBadge label={`from ${c.layerOrigin}`} tone="neutral" />
@@ -91,7 +91,7 @@ export function CascadeView({
                     Context: {journey.techName} · {selectedUseCase.function} · traceable to journey{" "}
                     <span className="font-mono">{c.sourceJourneyId}</span>
                   </p>
-                  <p className="text-[10px] text-indigo-600 dark:text-indigo-300 mt-1 font-semibold">
+                  <p className="text-[10px] text-blue-600 dark:text-blue-300 mt-1 font-semibold">
                     → Lands in {JARVIS_ROLE_LABEL[jarvisRoleForCascadeTarget(c.targetRole)]}'s Jarvis tasks
                   </p>
                 </li>

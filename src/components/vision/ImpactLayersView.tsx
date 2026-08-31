@@ -28,7 +28,7 @@ export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps)
       <VisionSection
         title="Multi-layer impact simulation"
         description="Understand the technology's effect beyond the use case itself."
-        icon={<LayoutGrid className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
+        icon={<LayoutGrid className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
         right={
           <div className="flex flex-wrap gap-1.5">
             {(["enterprise", "domain", "individual"] as ImpactLayerKind[]).map((k) => {
@@ -41,7 +41,7 @@ export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps)
                   aria-pressed={active === k}
                   className={`inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-lg font-semibold border transition-colors ${
                     active === k
-                      ? "bg-indigo-600 text-white border-indigo-600"
+                      ? "bg-blue-600 text-white border-blue-600"
                       : "bg-card text-foreground border-border hover:bg-muted"
                   }`}
                 >
@@ -56,7 +56,7 @@ export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps)
               aria-pressed={active === "compare"}
               className={`inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-lg font-semibold border transition-colors ${
                 active === "compare"
-                  ? "bg-indigo-600 text-white border-indigo-600"
+                  ? "bg-blue-600 text-white border-blue-600"
                   : "bg-card text-foreground border-border hover:bg-muted"
               }`}
             >
@@ -105,7 +105,7 @@ function LayerCard({
   return (
     <div className={`rounded-xl border border-border bg-muted/40 p-3.5 ${expanded ? "" : "h-full"}`}>
       <div className="flex items-center gap-2 mb-1.5">
-        <Icon className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />
+        <Icon className="w-4 h-4 text-blue-500 dark:text-blue-300" />
         <p className="text-xs font-semibold text-foreground">{LAYER_META[layer].label}</p>
       </div>
       <p className="text-[10px] uppercase tracking-wide text-muted-foreground mb-2">{LAYER_META[layer].hint}</p>

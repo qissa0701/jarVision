@@ -1,1 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/*
+ * The UI is designed around Google Sans / Product Sans (see --font-sans in
+ * theme.css). Those are proprietary Google brand fonts and can't be served as
+ * a web font, so when they aren't installed locally we fall back to Poppins —
+ * a free, Google-hosted geometric sans with a very similar feel.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');

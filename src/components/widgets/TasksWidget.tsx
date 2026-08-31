@@ -100,11 +100,11 @@ export function TasksWidget({
   return (
     <div className="space-y-3">
       {cascadedItems.length > 0 && (
-        <div className="rounded-xl border border-indigo-100 dark:border-indigo-400/20 bg-indigo-50/60 dark:bg-indigo-500/10 p-3">
+        <div className="rounded-xl border border-blue-100 dark:border-blue-400/20 bg-blue-50/60 dark:bg-blue-500/10 p-3">
           <div className="flex items-center gap-1.5 mb-2">
-            <Eye className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-300" />
-            <p className="text-[11px] font-bold uppercase tracking-wide text-indigo-700 dark:text-indigo-300">
-              From VISION Studio · {cascadedItems.length}
+            <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
+            <p className="text-[11px] font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">
+              From jarVision · {cascadedItems.length}
             </p>
           </div>
           <ul className="space-y-2">
@@ -135,10 +135,10 @@ export function TasksWidget({
           return (
             <div
               key={task.id}
-              className="flex flex-col gap-2 p-3 rounded-xl bg-muted hover:bg-indigo-50/50 dark:hover:bg-indigo-500/10 hover:border-indigo-100 dark:hover:border-indigo-400/20 border border-transparent transition-all group"
+              className="flex flex-col gap-2 p-3 rounded-xl bg-muted hover:bg-blue-50/50 dark:hover:bg-blue-500/10 hover:border-blue-100 dark:hover:border-blue-400/20 border border-transparent transition-all group"
             >
               <div className="flex items-start gap-3">
-                <div className="w-4 h-4 rounded-md border-2 border-border group-hover:border-indigo-300 dark:group-hover:border-indigo-400/50 flex-shrink-0 mt-0.5 transition-colors" />
+                <div className="w-4 h-4 rounded-md border-2 border-border group-hover:border-blue-300 dark:group-hover:border-blue-400/50 flex-shrink-0 mt-0.5 transition-colors" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 flex-wrap">
                     <p className="text-sm text-foreground font-semibold leading-snug flex-1 min-w-0">
@@ -156,7 +156,7 @@ export function TasksWidget({
                       >
                         {task.due}
                       </span>
-                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-semibold">
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 font-semibold">
                         {task.category}
                       </span>
                     </div>
@@ -170,8 +170,8 @@ export function TasksWidget({
                       </span>
                     )}
                     {status === "in_progress" && (
-                      <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                      <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                         In progress
                       </span>
                     )}
@@ -191,7 +191,7 @@ export function TasksWidget({
                       <button
                         type="button"
                         onClick={() => setDrawerTaskId(task.id)}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-100 dark:border-indigo-400/20 hover:border-indigo-200 dark:hover:border-indigo-400/30 transition-colors"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-100 dark:border-blue-400/20 hover:border-blue-200 dark:hover:border-blue-400/30 transition-colors"
                       >
                         <Sparkles className="w-3 h-3" />
                         Execute with Jarvis

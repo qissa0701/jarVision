@@ -17,6 +17,8 @@ import { CascadeView } from "./CascadeView";
 import { ReadinessPackView } from "./ReadinessPackView";
 import { DecisionGateView } from "./DecisionGateView";
 import { PoCTrackingView } from "./PoCTrackingView";
+import { StepThinking } from "./StepThinking";
+import type { ThoughtStep } from "./ChainOfThought";
 import { VisionSection, VisionButton, StageBadge } from "./visionUi";
 
 type SectionKey =
@@ -48,6 +50,54 @@ const SECTION_ORDER: SectionKey[] = [
   "adoption", "impact", "readiness", "cascade", "g0pack",
   "g0decision", "poc", "g3pack", "g3decision", "complete",
 ];
+
+/** Short scripted "thinking" steps shown on entry to each section. */
+function stepThoughts(section: SectionKey, journey: Journey): ThoughtStep[] {
+  const t = journey.techName;
+  switch (section) {
+    case "adoption":
+      return [
+        { label: "Collecting sources", detail: `Loading the ${t} adoption model…` },
+        { label: "Mapping functions", detail: "Laying out candidate functions and use cases…" },
+      ];
+    case "impact":
+      return [
+        { label: "Modelling enterprise impact", detail: "Governance, cost and restructuring signals…" },
+        { label: "Projecting layers", detail: "Estimating domain and individual effects…" },
+      ];
+    case "readiness":
+      return [
+        { label: "Assessing readiness", detail: "Mapping skills, certifications and trainings…" },
+        { label: "Preparing org scan", detail: "Indexing potential change drivers…" },
+      ];
+    case "cascade":
+      return [
+        { label: "Resolving actions", detail: "Deriving role-scoped action items…" },
+        { label: "Wiring traceability", detail: "Linking each item back to this simulation…" },
+      ];
+    case "g0pack":
+      return [
+        { label: "Assembling G0 inputs", detail: "Drafting sections against the DISD G0 template…" },
+        { label: "Routing owners", detail: "Matching each draft to its owning team…" },
+      ];
+    case "g0decision":
+      return [{ label: "Preparing G0 brief", detail: "Compiling the pack for the human decision…" }];
+    case "poc":
+      return [
+        { label: "Standing up PoC tracking", detail: "Loading KPIs and seed-funding envelope…" },
+      ];
+    case "g3pack":
+      return [
+        { label: "Assembling the business case", detail: "Drafting the DISD G3 inputs from PoC evidence…" },
+      ];
+    case "g3decision":
+      return [{ label: "Preparing G3 brief", detail: "Compiling the business case for the human decision…" }];
+    case "complete":
+      return [{ label: "Finalising handoff", detail: "Packaging the approved case for delivery…" }];
+    default:
+      return [{ label: "Loading", detail: "Preparing this step…" }];
+  }
+}
 
 export interface JourneyWorkspaceProps {
   journey: Journey;
@@ -121,7 +171,7 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
                 aria-current={active ? "true" : undefined}
                 className={`w-full flex items-center justify-between gap-2 text-left text-[12px] px-2.5 py-2 rounded-lg font-medium transition-colors ${
                   active
-                    ? "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 font-semibold"
+                    ? "bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold"
                     : isUnlocked
                     ? "text-foreground hover:bg-muted"
                     : "text-muted-foreground/50 cursor-not-allowed"
@@ -137,6 +187,7 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
 
       {/* Section content */}
       <div className="flex-1 min-w-0">
+        <StepThinking key={section} steps={stepThoughts(section, journey)} title="Simulating">
         {section === "adoption" && (
           <AdoptionPathView
             journey={journey}
@@ -207,6 +258,7 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
           />
         )}
         {section === "complete" && <CompletionView journey={journey} onBackToHome={onBackToHome} />}
+        </StepThinking>
       </div>
     </div>
   );
@@ -216,7 +268,7 @@ function CompletionView({ journey, onBackToHome }: { journey: Journey; onBackToH
   return (
     <VisionSection
       title="Business case approved — handed to delivery"
-      description="VISION's arc stops at the G3 boundary. Everything from G4 onward (Build, Go-Live, Deployment) is owned by the delivery team / DISD."
+      description="jarVision's arc stops at the G3 boundary. Everything from G4 onward (Build, Go-Live, Deployment) is owned by the delivery team / DISD."
       icon={<PartyPopper className="w-4 h-4 text-emerald-500" />}
       right={<StageBadge label="Complete" tone="green" />}
     >
@@ -227,14 +279,14 @@ function CompletionView({ journey, onBackToHome }: { journey: Journey; onBackToH
         </div>
         <p className="text-[11px] text-muted-foreground leading-relaxed">
           Both human decision gates (G0 and G3) were recorded by a human. The seed-funded PoC produced
-          the evidence for a G3 business case, and DISD approved the pilot. VISION never approved or
+          the evidence for a G3 business case, and DISD approved the pilot. jarVision never approved or
           funded anything — it prepared, simulated, and tracked; the humans decided.
         </p>
       </div>
       <div className="mt-4">
         <VisionButton variant="ghost" onClick={onBackToHome}>
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to VISION home
+          Back to jarVision home
         </VisionButton>
       </div>
     </VisionSection>

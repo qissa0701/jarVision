@@ -146,7 +146,7 @@ export function CalendarWidget({
           onChange={(e) => setNote(e.target.value)}
           placeholder="Jot other intentions or priorities for today…"
           rows={2}
-          className="w-full text-xs p-2.5 rounded-xl border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-400/40 focus:border-indigo-300 dark:focus:border-indigo-400/50 placeholder:text-muted-foreground resize-none"
+          className="w-full text-xs p-2.5 rounded-xl border border-border bg-muted focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40 focus:border-blue-300 dark:focus:border-blue-400/50 placeholder:text-muted-foreground resize-none"
         />
       </div>
 
@@ -160,7 +160,7 @@ export function CalendarWidget({
           onClick={() => setWeekExpanded((e) => !e)}
           aria-expanded={weekExpanded}
           aria-controls={WEEK_VIEW_PANEL_ID}
-          className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-700 dark:hover:text-indigo-200 transition-colors"
+          className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 transition-colors"
         >
           {weekExpanded ? (
             <>
@@ -201,14 +201,14 @@ export function CalendarWidget({
                         <div
                           className={`px-2.5 py-1.5 rounded-lg ${
                             m.type === "video"
-                              ? "bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-400/20"
+                              ? "bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-400/20"
                               : "bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-400/20"
                           }`}
                         >
                           <div
                             className={`text-xs font-semibold leading-snug ${
                               m.type === "video"
-                                ? "text-indigo-800 dark:text-indigo-300"
+                                ? "text-blue-800 dark:text-blue-300"
                                 : "text-emerald-800 dark:text-emerald-300"
                             }`}
                           >
@@ -217,7 +217,7 @@ export function CalendarWidget({
                           <div
                             className={`text-[11px] mt-0.5 ${
                               m.type === "video"
-                                ? "text-indigo-400 dark:text-indigo-400/80"
+                                ? "text-blue-400 dark:text-blue-400/80"
                                 : "text-emerald-500 dark:text-emerald-400/80"
                             }`}
                           >

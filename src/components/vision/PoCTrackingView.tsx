@@ -43,8 +43,8 @@ export function PoCTrackingView({
       <VisionSection
         title="Seed funding & PoC kickoff"
         description="Recorded only after the human G0 'Go'. Now tracked as a project, not just an idea."
-        icon={<Rocket className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
-        right={<StageBadge label={`Active PoC · ${idea.pocStage}`} tone="indigo" />}
+        icon={<Rocket className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
+        right={<StageBadge label={`Active PoC · ${idea.pocStage}`} tone="blue" />}
       >
         <div className="flex items-center gap-2 mb-3 flex-wrap">
           <Banknote className="w-4 h-4 text-emerald-500" />
@@ -65,7 +65,7 @@ export function PoCTrackingView({
           <ul className="mt-2 space-y-1">
             {journey.pocSuccessCriteria.map((c, i) => (
               <li key={i} className="flex items-start gap-2 text-[11px] text-muted-foreground">
-                <Target className="w-3 h-3 text-indigo-400 flex-shrink-0 mt-0.5" />
+                <Target className="w-3 h-3 text-blue-400 flex-shrink-0 mt-0.5" />
                 <span className="leading-relaxed">{c}</span>
               </li>
             ))}
@@ -77,7 +77,7 @@ export function PoCTrackingView({
       <VisionSection
         title="Track against success criteria"
         description="Is the experiment proving or rejecting the benefit hypothesis?"
-        icon={<Gauge className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
+        icon={<Gauge className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
       >
         <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {journey.pocKpis.map((k, i) => (
@@ -94,7 +94,7 @@ export function PoCTrackingView({
       <VisionSection
         title="Stage-gate progress"
         description="G1 (Experience Design) and G2 (Market Alignment) are optional, PM-managed checkpoints."
-        icon={<FlaskConical className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
+        icon={<FlaskConical className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
       >
         <div className="flex flex-wrap gap-2 mb-4">
           <CheckpointButton
@@ -118,7 +118,7 @@ export function PoCTrackingView({
           </div>
           <div className="h-2 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all"
+              className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all"
               style={{ width: `${readiness}%` }}
             />
           </div>
@@ -141,7 +141,7 @@ export function PoCTrackingView({
               aria-pressed={idea.pocOutcome === o}
               className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition-colors ${
                 idea.pocOutcome === o
-                  ? "bg-indigo-600 text-white border-indigo-600"
+                  ? "bg-blue-600 text-white border-blue-600"
                   : "bg-card text-foreground border-border hover:bg-muted"
               }`}
             >

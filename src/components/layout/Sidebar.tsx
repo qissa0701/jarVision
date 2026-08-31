@@ -38,7 +38,7 @@ function RailButton({
       title={label}
       className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
         active
-          ? "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-300"
+          ? "bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-300"
           : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
       }`}
     >
@@ -65,7 +65,7 @@ export function Sidebar({ nav, user, onNavChange, onLogout }: SidebarProps) {
       className="w-16 flex-shrink-0 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col items-center h-full z-20 relative py-4"
     >
       {/* Logo */}
-      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center shadow-sm dark:shadow-none flex-shrink-0 mb-6">
+      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center shadow-sm dark:shadow-none flex-shrink-0 mb-6">
         <Zap className="w-4 h-4 text-white" aria-hidden="true" />
         <span className="sr-only">Jarvis</span>
       </div>
@@ -95,7 +95,7 @@ export function Sidebar({ nav, user, onNavChange, onLogout }: SidebarProps) {
         <div
           aria-label={`Signed in as ${user.name}, ${user.title}`}
           title={`${user.name} · ${user.title}`}
-          className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 dark:from-indigo-400 dark:to-indigo-500 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0"
+          className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 dark:from-blue-400 dark:to-blue-500 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0"
         >
           {user.avatar}
         </div>

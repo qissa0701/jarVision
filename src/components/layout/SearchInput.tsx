@@ -30,7 +30,7 @@ export function SearchInput({ onOpenGlobalSearch }: SearchInputProps) {
         aria-label="Search tasks, emails, docs"
         onClick={onOpenGlobalSearch}
         onFocus={onOpenGlobalSearch}
-        className="w-80 pl-9 pr-4 py-2 text-sm text-left bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-400/40 focus:border-indigo-300 dark:focus:border-indigo-400/50 text-muted-foreground transition"
+        className="w-80 pl-9 pr-4 py-2 text-sm text-left bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40 focus:border-blue-300 dark:focus:border-blue-400/50 text-muted-foreground transition"
       >
         Search tasks, emails, docs…
       </button>

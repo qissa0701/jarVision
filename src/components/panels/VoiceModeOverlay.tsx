@@ -13,7 +13,7 @@
 // already used for ChatPanel's "Listening…" indicator and TaskPanel's
 // "JARVIS EXECUTING" badge), Tailwind theme tokens
 // (bg-card/border-border/text-muted-foreground/bg-muted), rounded-2xl, and
-// indigo as the primary accent. `motion/react` drives the pulse/scale
+// blue as the primary accent. `motion/react` drives the pulse/scale
 // animation, consistent with TaskPanel's shimmering active-step treatment.
 
 import { useRef } from "react";
@@ -39,9 +39,9 @@ export interface VoiceModeOverlayProps {
 /** Phase-specific copy + tone, kept in one place so the orb/label always agree. */
 const PHASE_COPY: Record<VoiceModePhase, { label: string; tone: string }> = {
   idle: { label: "Tap to talk", tone: "text-muted-foreground" },
-  listening: { label: "Listening…", tone: "text-indigo-600 dark:text-indigo-300" },
-  thinking: { label: "Thinking…", tone: "text-indigo-600 dark:text-indigo-300" },
-  speaking: { label: "Speaking…", tone: "text-indigo-600 dark:text-indigo-300" },
+  listening: { label: "Listening…", tone: "text-blue-600 dark:text-blue-300" },
+  thinking: { label: "Thinking…", tone: "text-blue-600 dark:text-blue-300" },
+  speaking: { label: "Speaking…", tone: "text-blue-600 dark:text-blue-300" },
 };
 
 /** The big pulsing orb/ring whose animation communicates the current phase. */
@@ -49,11 +49,11 @@ function VoiceOrb({ phase }: { phase: VoiceModePhase }) {
   if (phase === "thinking") {
     return (
       <div className="relative w-28 h-28 flex items-center justify-center">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center">
           <Sparkles className="w-7 h-7 text-white" />
         </div>
         <motion.div
-          className="absolute inset-0 rounded-full border-2 border-indigo-400"
+          className="absolute inset-0 rounded-full border-2 border-blue-400"
           animate={{ rotate: 360 }}
           transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
           style={{ borderTopColor: "transparent", borderLeftColor: "transparent" }}
@@ -65,7 +65,7 @@ function VoiceOrb({ phase }: { phase: VoiceModePhase }) {
   if (phase === "speaking") {
     return (
       <div className="relative w-28 h-28 flex items-center justify-center">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center z-10">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center z-10">
           <div className="flex items-end gap-0.5 h-6">
             {[0, 1, 2, 3].map((i) => (
               <motion.span
@@ -83,7 +83,7 @@ function VoiceOrb({ phase }: { phase: VoiceModePhase }) {
           </div>
         </div>
         <motion.div
-          className="absolute inset-0 rounded-full bg-indigo-400/30"
+          className="absolute inset-0 rounded-full bg-blue-400/30"
           animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -94,13 +94,13 @@ function VoiceOrb({ phase }: { phase: VoiceModePhase }) {
   if (phase === "listening") {
     return (
       <div className="relative w-28 h-28 flex items-center justify-center">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center z-10">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center z-10">
           <Mic className="w-7 h-7 text-white" />
         </div>
         {[0, 1].map((i) => (
           <motion.div
             key={i}
-            className="absolute inset-0 rounded-full border-2 border-indigo-400"
+            className="absolute inset-0 rounded-full border-2 border-blue-400"
             animate={{ scale: [1, 1.6], opacity: [0.6, 0] }}
             transition={{
               duration: 1.8,
@@ -151,7 +151,7 @@ export function VoiceModeOverlay({
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-border flex-shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-3.5 h-3.5 text-white" />
           </div>
           <h3
@@ -191,7 +191,7 @@ export function VoiceModeOverlay({
             <div
               className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
                 message.role === "user"
-                  ? "bg-indigo-600 dark:bg-indigo-500 text-white rounded-br-md"
+                  ? "bg-blue-600 dark:bg-blue-500 text-white rounded-br-md"
                   : "bg-muted text-foreground rounded-bl-md"
               }`}
             >

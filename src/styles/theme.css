@@ -8,10 +8,10 @@
   --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
-  --primary: #4f46e5;
+  --primary: #2563eb;
   --primary-foreground: #ffffff;
-  --secondary: #eef2ff;
-  --secondary-foreground: #4338ca;
+  --secondary: #eff6ff;
+  --secondary-foreground: #1d4ed8;
   --muted: #f9fafb;
   --muted-foreground: #6b7280;
   --accent: #ecfdf5;
@@ -24,12 +24,12 @@
   --switch-background: #d1d5db;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #4f46e5;
-  --chart-1: #4f46e5;
+  --ring: #2563eb;
+  --chart-1: #2563eb;
   --chart-2: #10b981;
   --chart-3: #f59e0b;
-  --chart-4: #3b82f6;
-  --chart-5: #8b5cf6;
+  --chart-4: #0ea5e9;
+  --chart-5: #0891b2;
   --radius: 0.75rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -46,7 +46,7 @@
  * harsh pure-black/pure-white pattern).
  *
  * Design approach:
- *   - Backgrounds sit in the L 0.20–0.27 range with a faint blue-violet hue
+ *   - Backgrounds sit in the L 0.20–0.27 range with a faint cool-blue hue
  *     (~264°) rather than true neutral gray-black or oklch(0.145 0 0)
  *     (near-pure-black). This reads as a soft charcoal/slate, not a void.
  *   - Foreground text is an off-white (L 0.93, not 0.985) with the same
@@ -60,7 +60,7 @@
  *     for `shadow-sm`/`shadow-xl`/`shadow-2xl` in component files, which
  *     lean on soft `shadow-black/*` tints for elevation instead of bright
  *     1px lines).
- *   - `--primary`/`--chart-*`/`--sidebar-primary` use desaturated indigo,
+ *   - `--primary`/`--chart-*`/`--sidebar-primary` use desaturated blue,
  *     emerald, amber tones (lower chroma than their light-mode counterparts)
  *     instead of re-using the same saturated accents, avoiding harsh
  *     high-chroma patches against the muted background.
@@ -72,10 +72,10 @@
   --card-foreground: oklch(0.93 0.006 264);
   --popover: oklch(0.235 0.014 264);
   --popover-foreground: oklch(0.93 0.006 264);
-  --primary: oklch(0.62 0.13 275);
-  --primary-foreground: oklch(0.97 0.01 275);
-  --secondary: oklch(0.28 0.02 264);
-  --secondary-foreground: oklch(0.88 0.02 275);
+  --primary: oklch(0.64 0.15 255);
+  --primary-foreground: oklch(0.97 0.01 255);
+  --secondary: oklch(0.28 0.02 255);
+  --secondary-foreground: oklch(0.88 0.04 255);
   --muted: oklch(0.26 0.014 264);
   --muted-foreground: oklch(0.68 0.015 264);
   --accent: oklch(0.29 0.03 165);
@@ -88,20 +88,20 @@
   --switch-background: oklch(0.32 0.016 264);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.62 0.13 275 / 0.6);
-  --chart-1: oklch(0.62 0.13 275);
+  --ring: oklch(0.64 0.15 255 / 0.6);
+  --chart-1: oklch(0.64 0.15 255);
   --chart-2: oklch(0.62 0.1 165);
   --chart-3: oklch(0.7 0.11 75);
   --chart-4: oklch(0.65 0.12 230);
-  --chart-5: oklch(0.65 0.12 320);
+  --chart-5: oklch(0.65 0.1 200);
   --sidebar: oklch(0.19 0.012 264);
   --sidebar-foreground: oklch(0.9 0.008 264);
-  --sidebar-primary: oklch(0.62 0.13 275);
-  --sidebar-primary-foreground: oklch(0.97 0.01 275);
+  --sidebar-primary: oklch(0.64 0.15 255);
+  --sidebar-primary-foreground: oklch(0.97 0.01 255);
   --sidebar-accent: oklch(0.26 0.014 264);
   --sidebar-accent-foreground: oklch(0.9 0.008 264);
   --sidebar-border: oklch(0.27 0.014 264);
-  --sidebar-ring: oklch(0.62 0.13 275 / 0.6);
+  --sidebar-ring: oklch(0.64 0.15 255 / 0.6);
 }
 
 /*
@@ -152,6 +152,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /*
+   * Primary UI typeface. Prefers Google's brand fonts (Google Sans / Product
+   * Sans) when they're available on the machine, then falls back to Poppins —
+   * a freely-hosted geometric sans that closely matches their look — before
+   * the platform system fonts. Google Sans / Product Sans are proprietary and
+   * cannot be redistributed via a web font, so they are referenced by name.
+   */
+  --font-sans: 'Google Sans', 'Product Sans', 'Google Sans Text', 'Poppins',
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -169,7 +179,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
   }
 
   .scrollbar-hide {

@@ -139,7 +139,7 @@ function CodeArtifactPreview({
       <div className="flex items-center gap-1.5 mb-1.5">
         <GitBranch className="w-3.5 h-3.5 text-muted-foreground" />
         <span className="text-[12px] font-mono text-foreground">{artifact.branch}</span>
-        <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-semibold">
+        <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 font-semibold">
           {artifact.prLabel}
         </span>
       </div>
@@ -227,13 +227,13 @@ function DocumentArtifactPreview({
             }
           }}
           placeholder="Leave a note for Jarvis…"
-          className="flex-1 text-[12px] px-2.5 py-1.5 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:focus:ring-indigo-400/40 focus:border-indigo-300 dark:focus:border-indigo-400/50 placeholder:text-muted-foreground"
+          className="flex-1 text-[12px] px-2.5 py-1.5 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40 focus:border-blue-300 dark:focus:border-blue-400/50 placeholder:text-muted-foreground"
         />
         <button
           type="button"
           onClick={onAddComment}
           aria-label="Add comment"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-400/20 transition-colors flex-shrink-0"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-500/10 border border-blue-100 dark:border-blue-400/20 transition-colors flex-shrink-0"
         >
           <MessageSquarePlus className="w-4 h-4" />
         </button>

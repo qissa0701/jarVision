@@ -79,6 +79,30 @@ export interface ReadinessItem {
   description: string;
 }
 
+/**
+ * A person or team VISION surfaces as a potential *driver of the change* for a
+ * technology — someone who already has the relevant experience/skills and could
+ * lead adoption. Used by the Human Readiness "recommended change drivers"
+ * finder. Illustrative demo data.
+ */
+export interface ChangeDriver {
+  id: string;
+  /** Person name, or a team name when `isTeam` is true. */
+  name: string;
+  /** Role / title (person) or a short descriptor (team). */
+  role: string;
+  /** Org unit / department the person or team sits in. */
+  team: string;
+  /** Whether this entry represents a whole team rather than an individual. */
+  isTeam?: boolean;
+  /** Skills/experience that make them a fit — the "already has experience" signal. */
+  skills: string[];
+  /** One-line rationale for why VISION recommends them. */
+  rationale: string;
+  /** Rough fit score (0–100) shown as a match strength. */
+  matchScore: number;
+}
+
 /** A scripted cascade action item template pushed to an org role on approve (FR-7). */
 export interface CascadeTemplate {
   targetRole: string;

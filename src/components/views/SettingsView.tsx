@@ -67,7 +67,7 @@ export function SettingsView({
       </header>
 
       <SettingsSection
-        icon={<Moon className="w-4 h-4 text-indigo-400 dark:text-indigo-300" />}
+        icon={<Moon className="w-4 h-4 text-blue-400 dark:text-blue-300" />}
         title="Overnight automation"
         description="The window during which Jarvis autonomously runs your delegated tasks."
       >
@@ -80,7 +80,7 @@ export function SettingsView({
               onChange={(e) =>
                 onWindowChange({ ...overnightWindow, start: e.target.value })
               }
-              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400/30 focus:border-indigo-300 dark:focus:border-indigo-400/50"
+              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400/30 focus:border-blue-300 dark:focus:border-blue-400/50"
             />
           </label>
           <label className="flex flex-col gap-1.5">
@@ -91,13 +91,13 @@ export function SettingsView({
               onChange={(e) =>
                 onWindowChange({ ...overnightWindow, end: e.target.value })
               }
-              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400/30 focus:border-indigo-300 dark:focus:border-indigo-400/50"
+              className="px-3 py-2 rounded-xl border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400/30 focus:border-blue-300 dark:focus:border-blue-400/50"
             />
           </label>
         </div>
-        <div className="flex items-start gap-2.5 mt-3 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-400/20">
-          <ShieldCheck className="w-4 h-4 text-indigo-500 dark:text-indigo-300 flex-shrink-0 mt-0.5" />
-          <p className="text-[12px] text-indigo-700 dark:text-indigo-300 leading-relaxed">
+        <div className="flex items-start gap-2.5 mt-3 p-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-400/20">
+          <ShieldCheck className="w-4 h-4 text-blue-500 dark:text-blue-300 flex-shrink-0 mt-0.5" />
+          <p className="text-[12px] text-blue-700 dark:text-blue-300 leading-relaxed">
             <span className="font-semibold">Human review required.</span> Overnight results
             are always staged for your approval — Jarvis never auto-applies changes without a
             final sign-off.
@@ -125,8 +125,8 @@ export function SettingsView({
             aria-checked={isDark}
             aria-label="Toggle dark mode"
             onClick={() => onThemeChange(isDark ? "light" : "dark")}
-            className={`relative w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-400/30 ${
-              isDark ? "bg-indigo-600 dark:bg-indigo-500" : "bg-switch-background"
+            className={`relative w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400/30 ${
+              isDark ? "bg-blue-600 dark:bg-blue-500" : "bg-switch-background"
             }`}
           >
             <span

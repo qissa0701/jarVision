@@ -59,13 +59,15 @@ export function VisionStudio({
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground">
       {/* VISION header (distinct from the Jarvis top bar). */}
-      <header className="h-[60px] flex-shrink-0 border-b border-border px-6 flex items-center gap-4 bg-gradient-to-r from-indigo-600/10 to-transparent">
+      <header className="h-[60px] flex-shrink-0 border-b border-border px-6 flex items-center gap-4 bg-gradient-to-r from-blue-600/10 to-transparent">
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center shadow-sm flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center shadow-sm flex-shrink-0">
             <Eye className="w-4 h-4 text-white" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-bold text-foreground leading-tight">VISION Studio</p>
+            <p className="text-sm font-bold leading-tight bg-gradient-to-r from-blue-700 to-sky-500 dark:from-blue-300 dark:to-sky-300 bg-clip-text text-transparent">
+              jarVision
+            </p>
             <p className="text-[11px] text-muted-foreground leading-tight truncate">
               Emerging Tech Adoption Simulator
             </p>
@@ -93,7 +95,7 @@ export function VisionStudio({
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto p-6 scrollbar-hide">
+      <main className="flex-1 overflow-y-auto p-6 scrollbar-hide bg-gradient-to-b from-blue-50/60 via-background to-background dark:from-blue-950/25 dark:via-background">
         <div className="max-w-5xl mx-auto">
           {screen.view === "home" && (
             <VisionHome

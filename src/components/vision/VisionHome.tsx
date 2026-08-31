@@ -13,11 +13,11 @@ export interface VisionHomeProps {
   onNewSimulation: () => void;
 }
 
-const STAGE_LABEL: Record<JourneyStage, { label: string; tone: "neutral" | "amber" | "green" | "red" | "indigo" }> = {
+const STAGE_LABEL: Record<JourneyStage, { label: string; tone: "neutral" | "amber" | "green" | "red" | "blue" }> = {
   exploring: { label: "Exploring", tone: "neutral" },
-  approved: { label: "Approved & cascaded", tone: "indigo" },
+  approved: { label: "Approved & cascaded", tone: "blue" },
   awaiting_g0: { label: "Awaiting G0 decision", tone: "amber" },
-  poc: { label: "PoC in progress", tone: "indigo" },
+  poc: { label: "PoC in progress", tone: "blue" },
   awaiting_g3: { label: "Awaiting G3 decision", tone: "amber" },
   complete: { label: "Business case approved", tone: "green" },
   rejected: { label: "No-go", tone: "red" },
@@ -32,7 +32,7 @@ export function VisionHome({ vision, onOpenIdea, onStartJourney, onNewSimulation
       <VisionSection
         title="Emerging Tech Adoption Simulator"
         description="Curiosity that takes the right action — explore, simulate, and shepherd a technology through PMI's human-gated pre-G0 → G3 lifecycle."
-        icon={<Lightbulb className="w-4 h-4 text-indigo-500 dark:text-indigo-300" />}
+        icon={<Lightbulb className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
         right={
           <VisionButton onClick={onNewSimulation}>
             <MessageSquarePlus className="w-3.5 h-3.5" />
@@ -41,8 +41,8 @@ export function VisionHome({ vision, onOpenIdea, onStartJourney, onNewSimulation
         }
       >
         <p className="text-[11px] text-muted-foreground leading-relaxed">
-          VISION never approves or funds anything — every gate (G0 and G3) is a human decision. VISION
-          prepares, simulates, and tracks; humans decide.
+          jarVision never approves or funds anything — every gate (G0 and G3) is a human decision.
+          jarVision prepares, simulates, and tracks; humans decide.
         </p>
       </VisionSection>
 
@@ -74,11 +74,11 @@ export function VisionHome({ vision, onOpenIdea, onStartJourney, onNewSimulation
               key={j.id}
               type="button"
               onClick={() => onStartJourney(j.id)}
-              className="text-left rounded-xl border border-border bg-muted/40 p-3.5 hover:border-indigo-200 dark:hover:border-indigo-400/30 hover:bg-muted transition-colors group"
+              className="text-left rounded-xl border border-border bg-muted/40 p-3.5 hover:border-blue-200 dark:hover:border-blue-400/30 hover:bg-muted transition-colors group"
             >
               <p className="text-sm font-semibold text-foreground">{j.techName}</p>
               <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed line-clamp-4">{j.tagline}</p>
-              <div className="flex items-center gap-1 mt-2.5 text-[11px] font-semibold text-indigo-600 dark:text-indigo-300">
+              <div className="flex items-center gap-1 mt-2.5 text-[11px] font-semibold text-blue-600 dark:text-blue-300">
                 Run journey
                 <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
               </div>

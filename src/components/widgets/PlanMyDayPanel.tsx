@@ -55,7 +55,7 @@ export function PlanMyDayPanel({ plan, onClose, onSync }: PlanMyDayPanelProps) {
   return (
     <div
       id={PLAN_PANEL_ID}
-      className="mt-3 p-3.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-400/20"
+      className="mt-3 p-3.5 rounded-xl bg-blue-50/60 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-400/20"
     >
       <div className="flex items-start justify-between gap-2 mb-3">
         <p className="text-xs text-muted-foreground flex-1">
@@ -65,7 +65,7 @@ export function PlanMyDayPanel({ plan, onClose, onSync }: PlanMyDayPanelProps) {
           type="button"
           onClick={onClose}
           aria-label="Close plan"
-          className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors"
+          className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -82,13 +82,13 @@ export function PlanMyDayPanel({ plan, onClose, onSync }: PlanMyDayPanelProps) {
               key={`${block.kind}-${block.startMinutes}-${i}`}
               className={`flex items-start gap-3 p-2.5 rounded-lg ${
                 block.kind === "meeting"
-                  ? "bg-indigo-100/70 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-400/25"
+                  ? "bg-blue-100/70 dark:bg-blue-500/15 border border-blue-200 dark:border-blue-400/25"
                   : "bg-card border border-border"
               }`}
             >
               <div className="flex-shrink-0 mt-0.5">
                 {block.kind === "meeting" ? (
-                  <CalendarIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-300" />
+                  <CalendarIcon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
                 ) : (
                   <Target className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300" />
                 )}
@@ -117,12 +117,12 @@ export function PlanMyDayPanel({ plan, onClose, onSync }: PlanMyDayPanelProps) {
       )}
 
       {/* Approve / Sync actions */}
-      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-indigo-100 dark:border-indigo-400/20 flex-wrap">
+      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-blue-100 dark:border-blue-400/20 flex-wrap">
         <button
           type="button"
           onClick={() => setApproved(true)}
           disabled={approved}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           <Check className="w-3.5 h-3.5" />
           {approved ? "Plan approved" : "Approve plan"}
@@ -134,7 +134,7 @@ export function PlanMyDayPanel({ plan, onClose, onSync }: PlanMyDayPanelProps) {
           disabled={!approved || isSynced}
           title={!approved ? "Approve the plan before syncing it to your calendar" : undefined}
           aria-describedby={!approved ? SYNC_HINT_ID : undefined}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-400/25 bg-white dark:bg-transparent hover:bg-indigo-50 dark:hover:bg-indigo-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-400/25 bg-white dark:bg-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <CalendarIcon className="w-3.5 h-3.5" />
           {isSynced ? "Synced ✓" : "Sync to Calendar"}
@@ -178,7 +178,7 @@ export function PlanMyDayButton({ expanded, onToggle }: PlanMyDayButtonProps) {
       onClick={onToggle}
       aria-expanded={expanded}
       aria-controls={PLAN_PANEL_ID}
-      className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shadow-indigo-200 dark:shadow-none"
+      className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
     >
       <Sparkles className="w-4 h-4" />
       Plan My Day

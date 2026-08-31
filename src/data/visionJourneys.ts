@@ -6,7 +6,7 @@
 // → recommended candidate → example cascade → G0 & G3 Readiness Pack drafts.
 // All figures are illustrative for demo purposes — there is no live LLM.
 
-import type { Journey, TrendNotification } from "@/types/vision";
+import type { ChangeDriver, Journey, TrendNotification } from "@/types/vision";
 
 // ─── Journey A — Agentic AI ──────────────────────────────────────────────────
 
@@ -534,6 +534,147 @@ export function matchJourney(input: string): Journey | null {
     if (score > 0 && (!best || score > best.score)) best = { journey, score };
   }
   return best ? best.journey : null;
+}
+
+/**
+ * Pick a seeded journey by scanning the prompt for the three seed tech names
+ * ("Agentic AI", "Physical AI", "Wicked Intelligence"), case-insensitively.
+ * The *first* one that appears in the text (by position) wins — so the earliest
+ * keyword in what the user pasted decides which pre-seeded article we use. Falls
+ * back to the broader keyword scorer when none of the three names appear.
+ */
+export function matchJourneyByPrompt(input: string): Journey | null {
+  const text = input.toLowerCase();
+  let earliest: { journey: Journey; index: number } | null = null;
+  for (const journey of VISION_JOURNEYS) {
+    const index = text.indexOf(journey.techName.toLowerCase());
+    if (index === -1) continue;
+    if (!earliest || index < earliest.index) earliest = { journey, index };
+  }
+  if (earliest) return earliest.journey;
+  // Nothing matched the three names directly — fall back to keyword scoring.
+  return matchJourney(input);
+}
+
+/**
+ * Recommended "change drivers" per journey — people/teams who already have the
+ * relevant experience and could lead adoption. Surfaced by the Human Readiness
+ * finder after a short (mock) org-wide scan. Illustrative demo data only.
+ */
+export const CHANGE_DRIVERS: Record<string, ChangeDriver[]> = {
+  "agentic-ai": [
+    {
+      id: "cd-agentic-1",
+      name: "Maya Rahardjo",
+      role: "Principal Solution Architect",
+      team: "Platform Engineering",
+      skills: ["Agent orchestration", "LLM tooling", "Guardrail design", "Platypus platform"],
+      rationale: "Led the Platypus orchestration layer — the natural owner for an agentic ePPM extension.",
+      matchScore: 95,
+    },
+    {
+      id: "cd-agentic-2",
+      name: "Daniel Okafor",
+      role: "Senior Project Manager",
+      team: "Project Management Excellence (ePPM)",
+      skills: ["Human-in-the-loop review", "Gate documentation", "Change management"],
+      rationale: "Runs G-gate reviews today; strongest fit to shape reward/goal design and adoption.",
+      matchScore: 88,
+    },
+    {
+      id: "cd-agentic-3",
+      name: "Innovation & AI Guild",
+      role: "Cross-functional community of practice",
+      team: "Enterprise Architecture",
+      isTeam: true,
+      skills: ["Responsible-AI governance", "Prompt/agent patterns", "PoC facilitation"],
+      rationale: "Already piloting internal AI assistants — a ready-made coalition to drive rollout.",
+      matchScore: 82,
+    },
+    {
+      id: "cd-agentic-4",
+      name: "Priya Nair",
+      role: "Cybersecurity Lead (1LoD)",
+      team: "Information Security",
+      skills: ["Per-agent identity", "API permissioning", "Audit logging"],
+      rationale: "Owns machine-identity standards needed to let agents act safely on systems of record.",
+      matchScore: 76,
+    },
+  ],
+  "physical-ai": [
+    {
+      id: "cd-physical-1",
+      name: "Ökan Yilmaz",
+      role: "Robotics & Simulation Lead",
+      team: "Manufacturing Technology",
+      skills: ["Digital twins", "Reinforcement learning", "Sim-to-real transfer"],
+      rationale: "Built the first line-level digital twin PoC — the clearest driver for predictive maintenance.",
+      matchScore: 93,
+    },
+    {
+      id: "cd-physical-2",
+      name: "Sofia Marchetti",
+      role: "Operations Safety Manager",
+      team: "Plant Operations",
+      skills: ["Industrial safety", "OT security", "Constrained real-world piloting"],
+      rationale: "Certifies floor-level automation; essential to run a safe constrained pilot.",
+      matchScore: 84,
+    },
+    {
+      id: "cd-physical-3",
+      name: "Edge & IoT Platform Team",
+      role: "Sensor / edge infrastructure",
+      team: "Supply Chain Technology",
+      isTeam: true,
+      skills: ["Edge compute", "Sensor integration", "Telemetry pipelines"],
+      rationale: "Maintains the plant sensor mesh the twin would learn from.",
+      matchScore: 79,
+    },
+    {
+      id: "cd-physical-4",
+      name: "Rahul Menon",
+      role: "Capital Projects Finance Partner",
+      team: "IT Finance",
+      skills: ["Capex modelling", "Downtime-cost analysis", "Benefit realisation"],
+      rationale: "Best placed to build the capex-heavy business case for the robotics PoC.",
+      matchScore: 71,
+    },
+  ],
+  "wicked-intelligence": [
+    {
+      id: "cd-wicked-1",
+      name: "Amara Bright",
+      role: "Head of Portfolio Strategy",
+      team: "Strategy & Portfolio",
+      skills: ["Systems thinking", "Problem framing", "Investment prioritisation"],
+      rationale: "Owns cross-portfolio prioritisation — ideal to lead wicked-problem triage.",
+      matchScore: 91,
+    },
+    {
+      id: "cd-wicked-2",
+      name: "Tomás Guerrero",
+      role: "Innovation Lead / Explorer",
+      team: "Innovation Office",
+      skills: ["#unthink/#unask/#unlearn facilitation", "Design thinking", "Hypothesis design"],
+      rationale: "Already facilitates reframing workshops — a ready driver for the framing method.",
+      matchScore: 86,
+    },
+    {
+      id: "cd-wicked-3",
+      name: "Decision Science Guild",
+      role: "Analytics community of practice",
+      team: "Data & Analytics",
+      isTeam: true,
+      skills: ["Multi-objective optimisation", "Scenario modelling", "Value hypotheses"],
+      rationale: "Can pressure-test framed problems and estimate expected value.",
+      matchScore: 78,
+    },
+  ],
+};
+
+/** Look up recommended change drivers for a journey (mock org scan). */
+export function getChangeDrivers(journeyId: string): ChangeDriver[] {
+  return CHANGE_DRIVERS[journeyId] ?? [];
 }
 
 /** Scripted proactive trend nudges surfaced in Jarvis (FR-13.1). */
