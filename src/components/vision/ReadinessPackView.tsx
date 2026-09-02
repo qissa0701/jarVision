@@ -47,8 +47,10 @@ export interface ReadinessPackViewProps {
   generated: boolean;
   /** Generate the pack (marks it assembled). */
   onGenerate: () => void;
-  /** Submit the pack into the gate decision view. */
+  /** Advance out of the pack (to the next step). */
   onSubmitForDecision: () => void;
+  /** Override the primary submit button label (defaults to the gate wording). */
+  submitLabel?: string;
 }
 
 /**
@@ -86,10 +88,12 @@ export function ReadinessPackView({
   generated,
   onGenerate,
   onSubmitForDecision,
+  submitLabel: submitLabelProp,
 }: ReadinessPackViewProps) {
   const sections: PackSection[] = gate === "G0" ? journey.g0Pack : journey.g3Pack;
   const title = gate === "G0" ? "G0 Readiness Pack" : "G3 Business Case / Readiness Pack";
-  const submitLabel = gate === "G0" ? "Submit for G0 decision" : "Submit for G3 decision";
+  const submitLabel =
+    submitLabelProp ?? (gate === "G0" ? "Submit for G0 decision" : "Submit for G3 decision");
 
   const [statuses, setStatuses] = useState<Record<string, DocStatus>>({});
   const [reviewing, setReviewing] = useState<PackSection | null>(null);
@@ -272,7 +276,7 @@ export function ReadinessPackView({
             </div>
             {needsDuplicateCheck && !canSubmit && (
               <p className="text-[10px] text-muted-foreground mt-2">
-                Complete the duplicate check above before submitting for the G0 decision.
+                Complete the duplicate check above before continuing.
               </p>
             )}
           </>

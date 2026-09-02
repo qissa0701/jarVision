@@ -1,103 +1,36 @@
-// JourneyWorkspace — the per-idea lifecycle workspace.
+// JourneyWorkspace — the per-idea lifecycle workspace (the "exploring" page).
 //
-// Walks a single idea through VISION's arc: Adoption Path → Impact → Human
-// Readiness → Approve & Cascade → G0 Readiness Pack → G0 Decision → PoC
-// tracking → G3 Business Case → G3 Decision → Complete. A left rail lets the
-// user move between sections; later sections stay locked until their
-// preconditions are met (e.g. PoC tracking is locked until a human G0 "Go").
+// Walks a single idea through JARVISION's orchestrated pre-G0 arc:
+// Adoption Path → Multi-layer Impact → Human Readiness → Approve & Cascade →
+// G0 Readiness Pack → ePPM Entry. JARVISION orchestrates specialized agents
+// (through NEXUS) to produce each step — the "thinking" gate shown on entry to
+// a step narrates which agents are being called and aggregated. A left rail
+// lets the user move between steps; later steps stay locked until their
+// preconditions are met. The rail also has an "Agent Network" view: a session
+// log of which agents were used to explore *this* tech, plus the network.
 
 import { useState } from "react";
-import { ArrowLeft, CheckCircle2, Lock, PartyPopper } from "lucide-react";
-import type { Journey, GateDecisionKind, PoCOutcome, VisionIdea } from "@/types/vision";
+import { ArrowLeft, Lock, Network } from "lucide-react";
+import type { Journey, VisionIdea } from "@/types/vision";
 import type { VisionStudio } from "@/hooks/useVisionStudio";
+import {
+  orchestrationFor,
+  SECTION_LABELS,
+  SECTION_ORDER,
+  type JourneySection,
+} from "@/data/agentNetwork";
 import { AdoptionPathView } from "./AdoptionPathView";
 import { ImpactLayersView } from "./ImpactLayersView";
 import { HumanReadinessView } from "./HumanReadinessView";
 import { CascadeView } from "./CascadeView";
 import { ReadinessPackView } from "./ReadinessPackView";
-import { DecisionGateView } from "./DecisionGateView";
-import { PoCTrackingView } from "./PoCTrackingView";
+import { EppmEntryView } from "./EppmEntryView";
+import { AgentNetworkPanel } from "./AgentNetworkPanel";
 import { StepThinking } from "./StepThinking";
-import type { ThoughtStep } from "./ChainOfThought";
-import { VisionSection, VisionButton, StageBadge } from "./visionUi";
 
-type SectionKey =
-  | "adoption"
-  | "impact"
-  | "readiness"
-  | "cascade"
-  | "g0pack"
-  | "g0decision"
-  | "poc"
-  | "g3pack"
-  | "g3decision"
-  | "complete";
-
-const SECTION_LABELS: Record<SectionKey, string> = {
-  adoption: "1 · Adoption Path",
-  impact: "2 · Multi-layer Impact",
-  readiness: "3 · Human Readiness",
-  cascade: "4 · Approve & Cascade",
-  g0pack: "5 · G0 Readiness Pack",
-  g0decision: "6 · G0 Decision",
-  poc: "7 · Seed Funding & PoC",
-  g3pack: "8 · G3 Business Case",
-  g3decision: "9 · G3 Decision",
-  complete: "10 · Complete",
-};
-
-const SECTION_ORDER: SectionKey[] = [
-  "adoption", "impact", "readiness", "cascade", "g0pack",
-  "g0decision", "poc", "g3pack", "g3decision", "complete",
-];
-
-/** Short scripted "thinking" steps shown on entry to each section. */
-function stepThoughts(section: SectionKey, journey: Journey): ThoughtStep[] {
-  const t = journey.techName;
-  switch (section) {
-    case "adoption":
-      return [
-        { label: "Collecting sources", detail: `Loading the ${t} adoption model…` },
-        { label: "Mapping functions", detail: "Laying out candidate functions and use cases…" },
-      ];
-    case "impact":
-      return [
-        { label: "Modelling enterprise impact", detail: "Governance, cost and restructuring signals…" },
-        { label: "Projecting layers", detail: "Estimating domain and individual effects…" },
-      ];
-    case "readiness":
-      return [
-        { label: "Assessing readiness", detail: "Mapping skills, certifications and trainings…" },
-        { label: "Preparing org scan", detail: "Indexing potential change drivers…" },
-      ];
-    case "cascade":
-      return [
-        { label: "Resolving actions", detail: "Deriving role-scoped action items…" },
-        { label: "Wiring traceability", detail: "Linking each item back to this simulation…" },
-      ];
-    case "g0pack":
-      return [
-        { label: "Assembling G0 inputs", detail: "Drafting sections against the DISD G0 template…" },
-        { label: "Routing owners", detail: "Matching each draft to its owning team…" },
-      ];
-    case "g0decision":
-      return [{ label: "Preparing G0 brief", detail: "Compiling the pack for the human decision…" }];
-    case "poc":
-      return [
-        { label: "Standing up PoC tracking", detail: "Loading KPIs and seed-funding envelope…" },
-      ];
-    case "g3pack":
-      return [
-        { label: "Assembling the business case", detail: "Drafting the DISD G3 inputs from PoC evidence…" },
-      ];
-    case "g3decision":
-      return [{ label: "Preparing G3 brief", detail: "Compiling the business case for the human decision…" }];
-    case "complete":
-      return [{ label: "Finalising handoff", detail: "Packaging the approved case for delivery…" }];
-    default:
-      return [{ label: "Loading", detail: "Preparing this step…" }];
-  }
-}
+type SectionKey = JourneySection;
+/** Rail targets: a journey step, or the meta "Agent Network" view. */
+type RailKey = SectionKey | "network";
 
 export interface JourneyWorkspaceProps {
   journey: Journey;
@@ -107,44 +40,26 @@ export interface JourneyWorkspaceProps {
 }
 
 export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: JourneyWorkspaceProps) {
-  const [section, setSection] = useState<SectionKey>("adoption");
+  const [view, setView] = useState<RailKey>("adoption");
+  // Steps explored this session (order of first open) — drives the agent log.
+  const [visited, setVisited] = useState<SectionKey[]>(["adoption"]);
 
-  const g0Decision = idea.g0DecisionId
-    ? vision.decisions.find((d) => d.id === idea.g0DecisionId)
-    : undefined;
-  const g3Decision = idea.g3DecisionId
-    ? vision.decisions.find((d) => d.id === idea.g3DecisionId)
-    : undefined;
-
-  // Which sections are reachable given the idea's progress.
+  // Which steps are reachable given the idea's progress. The arc now ends at
+  // the ePPM entry (unlocked once the G0 pack has been assembled).
   const unlocked: Record<SectionKey, boolean> = {
     adoption: true,
     impact: true,
     readiness: true,
     cascade: true,
     g0pack: idea.cascadeItemIds.length > 0,
-    g0decision: idea.g0PackGenerated,
-    poc: idea.seedFunding !== null,
-    g3pack: idea.pocOutcome !== null,
-    g3decision: idea.g3PackGenerated,
-    complete: idea.stage === "complete",
+    eppm: idea.g0PackGenerated,
   };
 
-  const go = (s: SectionKey) => setSection(s);
-
-  const recordDecision = (
-    gate: "G0" | "G3",
-    d: GateDecisionKind,
-    maker: string,
-    rationale: string,
-  ) => {
-    vision.recordGateDecision(idea.id, gate, d, maker, rationale);
-    // Route the user to the sensible next place based on the decision.
-    if (gate === "G0" && d === "go") go("poc");
-    else if (gate === "G0" && d === "rework") go("cascade");
-    else if (gate === "G3" && d === "go") go("complete");
-    else if (gate === "G3" && d === "pivot") go("poc");
+  const openSection = (s: SectionKey) => {
+    setView(s);
+    setVisited((prev) => (prev.includes(s) ? prev : [...prev, s]));
   };
+  const go = openSection;
 
   return (
     <div className="flex flex-col lg:flex-row gap-4">
@@ -161,13 +76,13 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
         <div className="rounded-2xl border border-border bg-card p-2 space-y-0.5">
           {SECTION_ORDER.map((s) => {
             const isUnlocked = unlocked[s];
-            const active = section === s;
+            const active = view === s;
             return (
               <button
                 key={s}
                 type="button"
                 disabled={!isUnlocked}
-                onClick={() => isUnlocked && setSection(s)}
+                onClick={() => isUnlocked && openSection(s)}
                 aria-current={active ? "true" : undefined}
                 className={`w-full flex items-center justify-between gap-2 text-left text-[12px] px-2.5 py-2 rounded-lg font-medium transition-colors ${
                   active
@@ -183,114 +98,77 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
             );
           })}
         </div>
+
+        {/* Agent Network — session log of agents used to explore this tech. */}
+        <div className="rounded-2xl border border-border bg-card p-2 mt-2">
+          <button
+            type="button"
+            onClick={() => setView("network")}
+            aria-current={view === "network" ? "true" : undefined}
+            className={`w-full flex items-center gap-2 text-left text-[12px] px-2.5 py-2 rounded-lg font-medium transition-colors ${
+              view === "network"
+                ? "bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 font-semibold"
+                : "text-foreground hover:bg-muted"
+            }`}
+          >
+            <Network className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate">Agent Network</span>
+          </button>
+        </div>
       </nav>
 
       {/* Section content */}
       <div className="flex-1 min-w-0">
-        <StepThinking key={section} steps={stepThoughts(section, journey)} title="Simulating">
-        {section === "adoption" && (
-          <AdoptionPathView
-            journey={journey}
-            idea={idea}
-            onPositionFunction={(fn) => vision.positionFunction(idea.id, fn)}
-            onToggleUseCase={(uc) => vision.toggleUseCase(idea.id, uc)}
-            onSetPrimaryUseCase={(uc) => vision.setPrimaryUseCase(idea.id, uc)}
-            onContinue={() => go("impact")}
-          />
+        {view === "network" ? (
+          <AgentNetworkPanel journey={journey} visited={visited} />
+        ) : (
+          <StepThinking
+            key={view}
+            steps={orchestrationFor(view, journey)}
+            title="JARVISION · orchestrating agents"
+          >
+            {view === "adoption" && (
+              <AdoptionPathView
+                journey={journey}
+                idea={idea}
+                onPositionFunction={(fn) => vision.positionFunction(idea.id, fn)}
+                onToggleUseCase={(uc) => vision.toggleUseCase(idea.id, uc)}
+                onSetPrimaryUseCase={(uc) => vision.setPrimaryUseCase(idea.id, uc)}
+                onContinue={() => go("impact")}
+              />
+            )}
+            {view === "impact" && (
+              <ImpactLayersView journey={journey} onContinue={() => go("readiness")} />
+            )}
+            {view === "readiness" && (
+              <HumanReadinessView journey={journey} onContinue={() => go("cascade")} />
+            )}
+            {view === "cascade" && (
+              <CascadeView
+                journey={journey}
+                idea={idea}
+                cascadeItems={vision.cascadeForIdea(idea.id)}
+                onApproveAndCascade={() => vision.approveAndCascade(idea.id)}
+                onContinue={() => go("g0pack")}
+              />
+            )}
+            {view === "g0pack" && (
+              <ReadinessPackView
+                gate="G0"
+                journey={journey}
+                idea={idea}
+                generated={idea.g0PackGenerated}
+                onGenerate={() => vision.submitForG0(idea.id)}
+                onSubmitForDecision={() => go("eppm")}
+                submitLabel="Continue to ePPM entry"
+              />
+            )}
+            {view === "eppm" && (
+              <EppmEntryView journey={journey} idea={idea} onBackToHome={onBackToHome} />
+            )}
+          </StepThinking>
         )}
-        {section === "impact" && (
-          <ImpactLayersView journey={journey} onContinue={() => go("readiness")} />
-        )}
-        {section === "readiness" && (
-          <HumanReadinessView journey={journey} onContinue={() => go("cascade")} />
-        )}
-        {section === "cascade" && (
-          <CascadeView
-            journey={journey}
-            idea={idea}
-            cascadeItems={vision.cascadeForIdea(idea.id)}
-            onApproveAndCascade={() => vision.approveAndCascade(idea.id)}
-            onContinue={() => go("g0pack")}
-          />
-        )}
-        {section === "g0pack" && (
-          <ReadinessPackView
-            gate="G0"
-            journey={journey}
-            idea={idea}
-            generated={idea.g0PackGenerated}
-            onGenerate={() => vision.submitForG0(idea.id)}
-            onSubmitForDecision={() => go("g0decision")}
-          />
-        )}
-        {section === "g0decision" && (
-          <DecisionGateView
-            gate="G0"
-            journey={journey}
-            idea={idea}
-            decision={g0Decision}
-            onRecordDecision={(d, maker, rationale) => recordDecision("G0", d, maker, rationale)}
-          />
-        )}
-        {section === "poc" && (
-          <PoCTrackingView
-            journey={journey}
-            idea={idea}
-            onAdvanceStage={(stage) => vision.advancePoCStage(idea.id, stage)}
-            onRecordOutcome={(o: PoCOutcome) => vision.recordPoCOutcome(idea.id, o)}
-            onContinueToG3={() => go("g3pack")}
-          />
-        )}
-        {section === "g3pack" && (
-          <ReadinessPackView
-            gate="G3"
-            journey={journey}
-            generated={idea.g3PackGenerated}
-            onGenerate={() => vision.submitForG3(idea.id)}
-            onSubmitForDecision={() => go("g3decision")}
-          />
-        )}
-        {section === "g3decision" && (
-          <DecisionGateView
-            gate="G3"
-            journey={journey}
-            idea={idea}
-            decision={g3Decision}
-            onRecordDecision={(d, maker, rationale) => recordDecision("G3", d, maker, rationale)}
-          />
-        )}
-        {section === "complete" && <CompletionView journey={journey} onBackToHome={onBackToHome} />}
-        </StepThinking>
       </div>
     </div>
-  );
-}
-
-function CompletionView({ journey, onBackToHome }: { journey: Journey; onBackToHome: () => void }) {
-  return (
-    <VisionSection
-      title="Business case approved — handed to delivery"
-      description="JARVISION's arc stops at the G3 boundary. Everything from G4 onward (Build, Go-Live, Deployment) is owned by the delivery team / DISD."
-      icon={<PartyPopper className="w-4 h-4 text-emerald-500" />}
-      right={<StageBadge label="Complete" tone="green" />}
-    >
-      <div className="rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-400/20 p-4">
-        <div className="flex items-center gap-2 mb-1.5">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-300" />
-          <p className="text-sm font-semibold text-foreground">{journey.techName}</p>
-        </div>
-        <p className="text-[11px] text-muted-foreground leading-relaxed">
-          Both human decision gates (G0 and G3) were recorded by a human. The seed-funded PoC produced
-          the evidence for a G3 business case, and DISD approved the pilot. JARVISION never approved or
-          funded anything — it prepared, simulated, and tracked; the humans decided.
-        </p>
-      </div>
-      <div className="mt-4">
-        <VisionButton variant="ghost" onClick={onBackToHome}>
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to JARVISION home
-        </VisionButton>
-      </div>
-    </VisionSection>
   );
 }

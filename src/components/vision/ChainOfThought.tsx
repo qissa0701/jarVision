@@ -8,12 +8,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { Check, Loader2, Sparkles } from "lucide-react";
+import { Bot, Check, Loader2, Sparkles } from "lucide-react";
 import { Typewriter } from "./Typewriter";
 
 export interface ThoughtStep {
   label: string;
   detail: string;
+  /**
+   * The specialized agent JARVISION is calling for this step (shown as a
+   * chip). When set, the step reads as an orchestrated agent call via NEXUS.
+   */
+  agent?: string;
+  /** The visual role of this step in the orchestration. */
+  kind?: "call" | "aggregate" | "result";
 }
 
 export interface ChainOfThoughtProps {
@@ -97,6 +104,13 @@ export function ChainOfThought({
                 >
                   {step.label}
                 </p>
+                {step.agent && (
+                  <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300">
+                    <Bot className="w-3 h-3" />
+                    {step.agent}
+                    <span className="font-normal text-muted-foreground">· via NEXUS</span>
+                  </span>
+                )}
                 <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
                   {isActive ? (
                     <Typewriter
