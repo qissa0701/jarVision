@@ -104,7 +104,7 @@ export function TasksWidget({
           <div className="flex items-center gap-1.5 mb-2">
             <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
             <p className="text-[11px] font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">
-              From jarVision · {cascadedItems.length}
+              From JARVISION · {cascadedItems.length}
             </p>
           </div>
           <ul className="space-y-2">

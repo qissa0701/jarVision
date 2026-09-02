@@ -1,11 +1,13 @@
-// Adoption Path (FR-4) — an interactive tree simulation.
+// Adoption Path (FR-4) — an interactive tree simulation with an executive
+// summary, multi-select candidate "checkout", and deep evaluation per use case.
 //
-// Technology → candidate Functions → Use Cases → Evaluation, drawn as an
-// expandable tree. Clicking a function node positions the tech into it (FR-4.4)
-// and branches out its candidate use cases; opening a use case expands an
-// evaluation widget; carrying a use case forward (FR-4.5) grows the tree again
-// into a projected adoption roadmap. Short "analysing" loaders between reveals
-// make it feel like a live simulation.
+// Flow: an Executive Summary frames how the technology fits PMI. Below it, an
+// expandable tree runs Technology → candidate Functions → Use Cases. Opening a
+// use case reveals its evaluation — opportunities, a similarity / reuse check
+// against existing projects, an explorable risk register (severity +
+// mitigations) and an adjustable cost-benefit scenario explorer. Users can add
+// several candidates to a checkout on the right; only the top (primary)
+// candidate is carried forward to the next steps.
 
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -18,22 +20,33 @@ import {
   ChevronRight,
   Cpu,
   GitBranch,
+  GitCompare,
   GraduationCap,
   LayoutGrid,
+  Lightbulb,
   Loader2,
+  Plus,
+  Recycle,
+  ScrollText,
   Sparkles,
+  Star,
   Target,
-  TriangleAlert,
+  Trash2,
   Users,
+  X,
 } from "lucide-react";
-import type { Journey, UseCase, VisionIdea } from "@/types/vision";
+import type { ExecutiveSummary, Journey, SimilarProject, UseCase, VisionIdea } from "@/types/vision";
+import { deriveSimilarProjects, topSimilarity } from "@/lib/visionEconomics";
+import { RiskExplorer } from "./RiskExplorer";
+import { CostBenefitExplorer } from "./CostBenefitExplorer";
 import { VisionSection, VisionButton, StageBadge } from "./visionUi";
 
 export interface AdoptionPathViewProps {
   journey: Journey;
   idea: VisionIdea;
   onPositionFunction: (fn: string) => void;
-  onSelectUseCase: (useCaseId: string) => void;
+  onToggleUseCase: (useCaseId: string) => void;
+  onSetPrimaryUseCase: (useCaseId: string) => void;
   onContinue: () => void;
 }
 
@@ -46,7 +59,8 @@ export function AdoptionPathView({
   journey,
   idea,
   onPositionFunction,
-  onSelectUseCase,
+  onToggleUseCase,
+  onSetPrimaryUseCase,
   onContinue,
 }: AdoptionPathViewProps) {
   const [openFunction, setOpenFunction] = useState<string | null>(idea.positionedFunction);
@@ -54,7 +68,8 @@ export function AdoptionPathView({
     idea.selectedUseCaseId ?? journey.recommendedUseCaseId,
   );
 
-  const useCasesFor = (fn: string) => journey.useCases.filter((u) => u.function === fn);
+  const candidatesFor = (fn: string) => journey.useCases.filter((u) => u.function === fn);
+  const selectedIds = idea.selectedUseCaseIds ?? [];
 
   const toggleFunction = (fn: string) => {
     const isOpen = openFunction === fn;
@@ -64,98 +79,277 @@ export function AdoptionPathView({
 
   return (
     <div className="space-y-4">
-      <VisionSection
-        title="Adoption Path"
-        description="An interactive simulation — expand the tree from technology to functions, use cases, and a projected roadmap."
-        icon={<Target className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
-      >
-        <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
-          Click a <span className="font-semibold text-foreground">function</span> to position the
-          technology, open a <span className="font-semibold text-foreground">use case</span> to
-          evaluate it, then carry one forward to grow the adoption roadmap.
-        </p>
-
-        {/* ── Tree ─────────────────────────────────────────────── */}
-        <div className="space-y-2">
-          {/* Root: the technology */}
-          <TreeNode
-            icon={Cpu}
-            title={journey.techName}
-            subtitle={journey.tagline}
-            active
-            tone="root"
-          />
-
-          {/* Branch: candidate functions */}
-          <Branch>
-            {journey.targetFunctions.map((fn) => {
-              const isOpen = openFunction === fn;
-              const positioned = idea.positionedFunction === fn;
-              const ucs = useCasesFor(fn);
-              return (
-                <div key={fn}>
-                  <TreeNode
-                    icon={Building2}
-                    title={fn}
-                    subtitle={`${ucs.length} candidate use case${ucs.length === 1 ? "" : "s"}`}
-                    expandable
-                    expanded={isOpen}
-                    active={positioned}
-                    badges={positioned ? [{ label: "Positioned", tone: "blue" }] : []}
-                    onClick={() => toggleFunction(fn)}
-                  />
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <BranchAnimated>
-                        <DelayedReveal label="Scanning candidate use cases…">
-                          {ucs.length === 0 ? (
-                            <p className="text-[11px] text-muted-foreground py-1.5 pl-1">
-                              No scripted use case for this function.
-                            </p>
-                          ) : (
-                            ucs.map((uc) => (
-                              <UseCaseNode
-                                key={uc.id}
-                                uc={uc}
-                                journey={journey}
-                                idea={idea}
-                                open={openUseCase === uc.id}
-                                onToggle={() => setOpenUseCase(openUseCase === uc.id ? null : uc.id)}
-                                onSelect={() => onSelectUseCase(uc.id)}
-                                onContinue={onContinue}
-                              />
-                            ))
-                          )}
-                        </DelayedReveal>
-                      </BranchAnimated>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </Branch>
+      {/* Top row: executive summary + candidate checkout side by side */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start">
+        <div className="flex-1 min-w-0">
+          {journey.executiveSummary && (
+            <ExecutiveSummaryCard summary={journey.executiveSummary} journey={journey} />
+          )}
         </div>
-      </VisionSection>
+        <aside className="w-full lg:w-80 flex-shrink-0">
+          <div className="lg:sticky lg:top-4">
+            <CheckoutPanel
+              journey={journey}
+              selectedIds={selectedIds}
+              onSetPrimary={onSetPrimaryUseCase}
+              onRemove={onToggleUseCase}
+              onContinue={onContinue}
+            />
+          </div>
+        </aside>
+      </div>
 
-      {/* Recommended candidate summary (FR-4.5). */}
-      <VisionSection
-        title="Recommended candidate"
-        icon={<Sparkles className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
-      >
-        <p className="text-xs text-foreground leading-relaxed">{journey.recommendationRationale}</p>
-        <div className="mt-3 flex items-center justify-between gap-3 flex-wrap">
-          <p className="text-[11px] text-muted-foreground">
-            {idea.selectedUseCaseId
-              ? "A candidate is carried forward. Continue to the multi-layer impact simulation."
-              : "Open a use case above and carry it forward (or use the recommended one) to continue."}
-          </p>
-          <VisionButton onClick={onContinue}>
-            Continue to impact simulation
-            <ChevronRight className="w-3.5 h-3.5" />
-          </VisionButton>
-        </div>
-      </VisionSection>
+      {/* Full-width adoption tree */}
+      <div>
+          <VisionSection
+            title="Adoption Path"
+            description="An interactive simulation — expand the tree from technology to functions and use cases, and evaluate each candidate."
+            icon={<Target className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
+          >
+            <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
+              Click a <span className="font-semibold text-foreground">function</span> to position the
+              technology, open a <span className="font-semibold text-foreground">use case</span> to
+              evaluate it, then <span className="font-semibold text-foreground">add candidates</span> to
+              your checkout. Explore several — only the top one is carried forward.
+            </p>
+
+            <div className="space-y-2">
+              {/* Root: the technology */}
+              <TreeNode icon={Cpu} title={journey.techName} subtitle={journey.tagline} active tone="root" />
+
+              {/* Branch: candidate functions */}
+              <Branch>
+                {journey.targetFunctions.map((fn) => {
+                  const isOpen = openFunction === fn;
+                  const positioned = idea.positionedFunction === fn;
+                  const ucs = candidatesFor(fn);
+                  return (
+                    <div key={fn}>
+                      <TreeNode
+                        icon={Building2}
+                        title={fn}
+                        subtitle={`${ucs.length} candidate use case${ucs.length === 1 ? "" : "s"}`}
+                        expandable
+                        expanded={isOpen}
+                        active={positioned}
+                        badges={positioned ? [{ label: "Positioned", tone: "blue" }] : []}
+                        onClick={() => toggleFunction(fn)}
+                      />
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <BranchAnimated>
+                            <DelayedReveal label="Scanning candidate use cases…">
+                              {ucs.length === 0 ? (
+                                <p className="text-[11px] text-muted-foreground py-1.5 pl-1">
+                                  No scripted use case for this function.
+                                </p>
+                              ) : (
+                                ucs.map((uc) => (
+                                  <UseCaseNode
+                                    key={uc.id}
+                                    uc={uc}
+                                    journey={journey}
+                                    idea={idea}
+                                    open={openUseCase === uc.id}
+                                    onToggle={() => setOpenUseCase(openUseCase === uc.id ? null : uc.id)}
+                                    onToggleSelect={() => onToggleUseCase(uc.id)}
+                                    onContinue={onContinue}
+                                  />
+                                ))
+                              )}
+                            </DelayedReveal>
+                          </BranchAnimated>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </Branch>
+            </div>
+          </VisionSection>
+      </div>
     </div>
+  );
+}
+
+/* ── Executive summary ─────────────────────────────────────────── */
+
+function ExecutiveSummaryCard({ summary, journey }: { summary: ExecutiveSummary; journey: Journey }) {
+  return (
+    <VisionSection
+      title="Executive summary"
+      description={`How ${journey.techName} fits PMI — the opportunity, what's already in place, and the candidates.`}
+      icon={<ScrollText className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <SummaryBlock icon={Target} title="Strategic fit at PMI" body={summary.fit} />
+        <SummaryBlock icon={Lightbulb} title="The opportunity" body={summary.opportunity} tone="blue" />
+        <div className="rounded-xl border border-border bg-muted/40 p-3">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+              Already adopted at PMI
+            </p>
+          </div>
+          <ul className="space-y-1">
+            {summary.alreadyAdopted.map((a) => (
+              <li key={a} className="flex items-start gap-2 text-[11px] text-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 mt-1.5" />
+                <span className="leading-relaxed">{a}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <SummaryBlock icon={Boxes} title="Use cases explored" body={summary.useCaseSummary} />
+      </div>
+    </VisionSection>
+  );
+}
+
+function SummaryBlock({
+  icon: Icon,
+  title,
+  body,
+  tone = "default",
+}: {
+  icon: typeof Target;
+  title: string;
+  body: string;
+  tone?: "default" | "blue";
+}) {
+  return (
+    <div
+      className={`rounded-xl border p-3 ${
+        tone === "blue"
+          ? "border-blue-200 dark:border-blue-400/30 bg-gradient-to-br from-blue-50 to-blue-100/30 dark:from-blue-500/10 dark:to-blue-500/5"
+          : "border-border bg-muted/40"
+      }`}
+    >
+      <div className="flex items-center gap-1.5 mb-1.5">
+        <Icon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{title}</p>
+      </div>
+      <p className="text-[11px] text-foreground leading-relaxed">{body}</p>
+    </div>
+  );
+}
+
+/* ── Candidate checkout ────────────────────────────────────────── */
+
+function CheckoutPanel({
+  journey,
+  selectedIds,
+  onSetPrimary,
+  onRemove,
+  onContinue,
+}: {
+  journey: Journey;
+  selectedIds: string[];
+  onSetPrimary: (id: string) => void;
+  onRemove: (id: string) => void;
+  onContinue: () => void;
+}) {
+  const selected = selectedIds
+    .map((id) => journey.useCases.find((u) => u.id === id))
+    .filter((u): u is UseCase => Boolean(u));
+
+  return (
+    <section className="bg-gradient-to-br from-card to-muted/40 rounded-2xl border border-border shadow-sm p-4">
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-blue-500 dark:text-blue-300" />
+          <h2 className="text-sm font-semibold text-foreground">Candidate checkout</h2>
+        </div>
+        <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[11px] font-bold bg-blue-600 text-white">
+          {selected.length}
+        </span>
+      </div>
+      <p className="text-[11px] text-muted-foreground leading-relaxed mb-3">
+        Humans can explore many paths. Add the candidates worth pursuing — for the next steps only the{" "}
+        <span className="font-semibold text-foreground">top (primary)</span> one is carried forward.
+      </p>
+
+      {selected.length === 0 ? (
+        <div className="rounded-xl bg-muted p-4 text-center">
+          <p className="text-[11px] text-muted-foreground leading-relaxed">
+            No candidates yet. Open a use case in the tree and{" "}
+            <span className="font-semibold text-foreground">add it to your checkout</span>.
+          </p>
+          <p className="text-[10px] text-muted-foreground mt-2">
+            Recommended: {shortTitle(
+              journey.useCases.find((u) => u.id === journey.recommendedUseCaseId)?.description ?? "",
+            )}
+          </p>
+        </div>
+      ) : (
+        <ul className="space-y-2">
+          {selected.map((uc, i) => {
+            const isPrimary = i === 0;
+            const isRecommended = uc.id === journey.recommendedUseCaseId;
+            return (
+              <motion.li
+                key={uc.id}
+                layout
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`rounded-xl border p-2.5 ${
+                  isPrimary
+                    ? "border-blue-300 dark:border-blue-400/40 bg-blue-50/60 dark:bg-blue-500/10"
+                    : "border-border bg-card"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {isPrimary && <StageBadge label="Top / primary" tone="blue" />}
+                      {isRecommended && <StageBadge label="Recommended" tone="green" />}
+                    </div>
+                    <p className="text-[11px] font-semibold text-foreground mt-1 leading-tight">
+                      {uc.function}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                      {shortTitle(uc.description)}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onRemove(uc.id)}
+                    aria-label={`Remove ${uc.function} from checkout`}
+                    className="w-6 h-6 rounded-md border border-border bg-card flex items-center justify-center flex-shrink-0 hover:bg-muted text-muted-foreground"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+                {!isPrimary && (
+                  <button
+                    type="button"
+                    onClick={() => onSetPrimary(uc.id)}
+                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-blue-600 dark:text-blue-300 hover:underline"
+                  >
+                    <Star className="w-3 h-3" />
+                    Make primary
+                  </button>
+                )}
+              </motion.li>
+            );
+          })}
+        </ul>
+      )}
+
+      <div className="mt-4">
+        <VisionButton onClick={onContinue} disabled={selected.length === 0}>
+          <CheckCircle2 className="w-3.5 h-3.5" />
+          Continue with top candidate
+          <ChevronRight className="w-3.5 h-3.5" />
+        </VisionButton>
+        {selected.length > 1 && (
+          <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
+            {selected.length} candidates saved. The other {selected.length - 1} remain in your checklist to
+            explore later.
+          </p>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -167,7 +361,7 @@ function UseCaseNode({
   idea,
   open,
   onToggle,
-  onSelect,
+  onToggleSelect,
   onContinue,
 }: {
   uc: UseCase;
@@ -175,14 +369,16 @@ function UseCaseNode({
   idea: VisionIdea;
   open: boolean;
   onToggle: () => void;
-  onSelect: () => void;
+  onToggleSelect: () => void;
   onContinue: () => void;
 }) {
   const isRecommended = uc.id === journey.recommendedUseCaseId;
-  const isSelected = idea.selectedUseCaseId === uc.id;
+  const isSelected = (idea.selectedUseCaseIds ?? []).includes(uc.id);
+  const isPrimary = idea.selectedUseCaseId === uc.id;
   const badges: NodeBadge[] = [];
   if (isRecommended) badges.push({ label: "Recommended", tone: "blue" });
-  if (isSelected) badges.push({ label: "Carried forward", tone: "green" });
+  if (isPrimary) badges.push({ label: "Primary", tone: "green" });
+  else if (isSelected) badges.push({ label: "In checkout", tone: "green" });
 
   return (
     <div>
@@ -203,22 +399,25 @@ function UseCaseNode({
             <DelayedReveal label="Running evaluation…" delay={620}>
               <div className="rounded-xl border border-border bg-gradient-to-br from-card to-muted/40 p-3 space-y-3">
                 <EvalList title="Opportunities" items={uc.opportunities} tone="green" />
-                <EvalList title="Risks" items={uc.risks} tone="amber" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <MiniFact label="Benefit–cost (indicative)" value={uc.benefitCost} />
-                  <MiniFact label="Timeline (indicative)" value={uc.timeline} />
-                </div>
-                <EvalList title="Potential project clashes" items={uc.projectClashes} tone="amber" />
+
+                <SimilarityPanel uc={uc} />
+
+                <RiskExplorer useCase={uc} />
+
+                <CostBenefitExplorer useCase={uc} />
+
+                <MiniFact label="Timeline (indicative)" value={uc.timeline} />
+
                 <div className="pt-0.5">
-                  <VisionButton onClick={onSelect} variant={isSelected ? "ghost" : "primary"}>
-                    <Sparkles className="w-3.5 h-3.5" />
-                    {isSelected ? "Selected as candidate" : "Carry this use case forward"}
+                  <VisionButton onClick={onToggleSelect} variant={isSelected ? "ghost" : "primary"}>
+                    {isSelected ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                    {isSelected ? "Remove from checkout" : "Add to candidates"}
                   </VisionButton>
                 </div>
               </div>
             </DelayedReveal>
 
-            {/* Choosing a use case expands the tree again → adoption roadmap. */}
+            {/* Selecting a candidate expands the tree again → adoption roadmap. */}
             <AnimatePresence initial={false}>
               {isSelected && (
                 <BranchAnimated>
@@ -231,6 +430,110 @@ function UseCaseNode({
           </BranchAnimated>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+/* ── Similarity / reuse check ──────────────────────────────────── */
+
+function SimilarityPanel({ uc }: { uc: UseCase }) {
+  const sims = deriveSimilarProjects(uc);
+  const top = topSimilarity(uc);
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-3">
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="flex items-center gap-1.5">
+          <GitCompare className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
+          <p className="text-[11px] font-semibold text-foreground">Similarity &amp; reuse check</p>
+        </div>
+        {sims.length > 0 && (
+          <span
+            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              top >= 70
+                ? "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300"
+                : top >= 45
+                  ? "bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300"
+                  : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+            }`}
+          >
+            top similarity {top}%
+          </span>
+        )}
+      </div>
+
+      {sims.length === 0 ? (
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          No overlapping PMI projects found — this candidate looks net-new.
+        </p>
+      ) : (
+        <>
+          {top >= 70 && (
+            <p className="text-[11px] text-red-700 dark:text-red-300 leading-relaxed mb-2">
+              High overlap — position as an extension, not a duplicate, and reuse existing components.
+            </p>
+          )}
+          <ul className="space-y-2">
+            {sims.map((s) => (
+              <SimilarProjectRow key={s.name} project={s} />
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+
+function SimilarProjectRow({ project }: { project: SimilarProject }) {
+  return (
+    <li className="rounded-lg border border-border bg-muted/40 p-2.5">
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold text-foreground leading-tight">{project.name}</p>
+          <p className="text-[10px] text-muted-foreground">{project.status}</p>
+        </div>
+        <span className="text-[10px] font-bold text-foreground tabular-nums flex-shrink-0">
+          {project.similarityScore}% match
+        </span>
+      </div>
+      {project.overlappingComponents.length > 0 && (
+        <ChipRow icon={GitCompare} label="Overlaps" items={project.overlappingComponents} tone="amber" />
+      )}
+      {project.reusableComponents.length > 0 && (
+        <ChipRow icon={Recycle} label="Reusable" items={project.reusableComponents} tone="green" />
+      )}
+    </li>
+  );
+}
+
+function ChipRow({
+  icon: Icon,
+  label,
+  items,
+  tone,
+}: {
+  icon: typeof Recycle;
+  label: string;
+  items: string[];
+  tone: "amber" | "green";
+}) {
+  const chip =
+    tone === "amber"
+      ? "bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300"
+      : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
+  return (
+    <div className="mt-1.5">
+      <div className="flex items-center gap-1 mb-1">
+        <Icon className={`w-3 h-3 ${tone === "amber" ? "text-amber-500" : "text-emerald-500"}`} />
+        <span className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {items.map((it) => (
+          <span key={it} className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${chip}`}>
+            {it}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -315,8 +618,7 @@ function TreeNode({
   onClick?: () => void;
 }) {
   const isRoot = tone === "root";
-  const base =
-    "w-full flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all";
+  const base = "w-full flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all";
   const skin = isRoot
     ? "border-blue-300 dark:border-blue-400/40 bg-gradient-to-br from-blue-600 to-blue-500 dark:from-blue-600 dark:to-blue-500 text-white shadow-sm"
     : active
@@ -336,9 +638,7 @@ function TreeNode({
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`text-xs font-semibold ${isRoot ? "text-white" : "text-foreground"}`}>
-            {title}
-          </span>
+          <span className={`text-xs font-semibold ${isRoot ? "text-white" : "text-foreground"}`}>{title}</span>
           {badges.map((b) => (
             <StageBadge key={b.label} label={b.label} tone={b.tone} />
           ))}
@@ -374,9 +674,7 @@ function TreeNode({
 
 /** Static indented branch container with a connector line. */
 function Branch({ children }: { children: ReactNode }) {
-  return (
-    <div className="ml-4 pl-4 border-l-2 border-dashed border-border space-y-2">{children}</div>
-  );
+  return <div className="ml-4 pl-4 border-l-2 border-dashed border-border space-y-2">{children}</div>;
 }
 
 /** Animated (expand/collapse) indented branch. */
@@ -431,7 +729,6 @@ function EvalList({ title, items, tone }: { title: string; items: string[]; tone
   return (
     <div>
       <div className="flex items-center gap-1.5 mb-1">
-        {tone === "amber" && <TriangleAlert className="w-3 h-3 text-amber-500" />}
         <p className="text-[11px] font-semibold text-foreground">{title}</p>
       </div>
       <ul className="space-y-1">

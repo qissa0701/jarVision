@@ -42,8 +42,21 @@ function loadState(storage: Pick<Storage, "getItem">): VisionState {
     const raw = storage.getItem(STORAGE_KEYS.vision);
     if (!raw) return emptyState();
     const parsed = JSON.parse(raw) as Partial<VisionState>;
+    // Migrate older persisted ideas that predate multi-select candidates.
+    const ideas: Record<string, VisionIdea> = {};
+    for (const [id, idea] of Object.entries(parsed.ideas ?? {})) {
+      ideas[id] = {
+        ...idea,
+        selectedUseCaseIds:
+          idea.selectedUseCaseIds && idea.selectedUseCaseIds.length > 0
+            ? idea.selectedUseCaseIds
+            : idea.selectedUseCaseId
+              ? [idea.selectedUseCaseId]
+              : [],
+      };
+    }
     return {
-      ideas: parsed.ideas ?? {},
+      ideas,
       cascade: parsed.cascade ?? {},
       decisions: parsed.decisions ?? {},
       dismissedTrends: parsed.dismissedTrends ?? [],
@@ -73,8 +86,12 @@ export interface VisionStudio {
   startJourney: (journeyId: string) => string | null;
   /** Position the tech into a chosen function (FR-4.4). */
   positionFunction: (ideaId: string, fn: string) => void;
-  /** Carry a recommended use case forward (FR-4.5). */
+  /** Carry a single recommended use case forward, replacing any selection (FR-4.5). */
   selectUseCase: (ideaId: string, useCaseId: string) => void;
+  /** Toggle a candidate use case in the multi-select checkout (FR-4). */
+  toggleUseCase: (ideaId: string, useCaseId: string) => void;
+  /** Promote a selected candidate to the "top" one carried forward. */
+  setPrimaryUseCase: (ideaId: string, useCaseId: string) => void;
   /** Approve the recommendation and cascade role-scoped action items (FR-7). */
   approveAndCascade: (ideaId: string) => void;
   /** Generate the G0 Readiness Pack and submit for the G0 decision (FR-8/9). */
@@ -129,6 +146,7 @@ export function useVisionStudio(
       stage: "exploring",
       positionedFunction: null,
       selectedUseCaseId: null,
+      selectedUseCaseIds: [],
       cascadeItemIds: [],
       g0PackGenerated: false,
       g0DecisionId: null,
@@ -170,8 +188,55 @@ export function useVisionStudio(
   );
 
   const selectUseCase = useCallback(
-    (ideaId: string, useCaseId: string) => patchIdea(ideaId, { selectedUseCaseId: useCaseId }),
+    (ideaId: string, useCaseId: string) =>
+      patchIdea(ideaId, { selectedUseCaseId: useCaseId, selectedUseCaseIds: [useCaseId] }),
     [patchIdea],
+  );
+
+  const toggleUseCase = useCallback(
+    (ideaId: string, useCaseId: string) => {
+      setState((prev) => {
+        const idea = prev.ideas[ideaId];
+        if (!idea) return prev;
+        const current = idea.selectedUseCaseIds ?? [];
+        const next = current.includes(useCaseId)
+          ? current.filter((id) => id !== useCaseId)
+          : [...current, useCaseId];
+        return {
+          ...prev,
+          ideas: {
+            ...prev.ideas,
+            [ideaId]: {
+              ...idea,
+              selectedUseCaseIds: next,
+              selectedUseCaseId: next[0] ?? null,
+              updatedAt: Date.now(),
+            },
+          },
+        };
+      });
+    },
+    [],
+  );
+
+  const setPrimaryUseCase = useCallback(
+    (ideaId: string, useCaseId: string) => {
+      setState((prev) => {
+        const idea = prev.ideas[ideaId];
+        if (!idea) return prev;
+        const current = idea.selectedUseCaseIds ?? [];
+        if (!current.includes(useCaseId)) return prev;
+        const next = [useCaseId, ...current.filter((id) => id !== useCaseId)];
+        return {
+          ...prev,
+          ideas: {
+            ...prev.ideas,
+            [ideaId]: { ...idea, selectedUseCaseIds: next, selectedUseCaseId: useCaseId, updatedAt: Date.now() },
+          },
+        };
+      });
+    },
+    [],
   );
 
   const approveAndCascade = useCallback((ideaId: string) => {
@@ -210,6 +275,10 @@ export function useVisionStudio(
             ...idea,
             stage: "approved",
             selectedUseCaseId: idea.selectedUseCaseId ?? journey.recommendedUseCaseId,
+            selectedUseCaseIds:
+              idea.selectedUseCaseIds && idea.selectedUseCaseIds.length > 0
+                ? idea.selectedUseCaseIds
+                : [journey.recommendedUseCaseId],
             cascadeItemIds: ids,
             updatedAt: now,
           },
@@ -374,6 +443,8 @@ export function useVisionStudio(
     startJourney,
     positionFunction,
     selectUseCase,
+    toggleUseCase,
+    setPrimaryUseCase,
     approveAndCascade,
     submitForG0,
     submitForG3,

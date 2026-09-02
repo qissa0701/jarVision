@@ -33,10 +33,9 @@ export function Typewriter({
 
   useEffect(() => {
     setCount(0);
-    let timer: number | undefined;
     let interval: number | undefined;
 
-    timer = window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       interval = window.setInterval(() => {
         setCount((c) => {
           if (c >= text.length) {

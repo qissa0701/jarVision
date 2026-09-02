@@ -45,7 +45,7 @@ const URL_RE = /\bhttps?:\/\/[^\s]+/gi;
 function extractPdfTitle(fileName: string): string {
   const base = fileName
     .replace(/\.pdf$/i, "")
-    .replace(/[_\-]+/g, " ")
+    .replace(/[_-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
   if (!base) return "Untitled document";
@@ -185,7 +185,7 @@ export function VisionChatbot({ onLaunchJourney, onBack }: VisionChatbotProps) {
         className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mb-3"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
-        jarVision home
+        JARVISION home
       </button>
 
       <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">

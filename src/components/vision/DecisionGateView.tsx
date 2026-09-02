@@ -8,8 +8,9 @@
 // Log with the decision-maker and timestamp.
 
 import { useState } from "react";
-import { Gavel, Lock, ShieldAlert } from "lucide-react";
+import { ExternalLink, Gavel, Lock, ShieldAlert } from "lucide-react";
 import type { Gate, GateDecision, GateDecisionKind, Journey, VisionIdea } from "@/types/vision";
+import { eppmEntryUrl } from "@/data/visionJourneys";
 import { VisionSection, VisionButton, StageBadge } from "./visionUi";
 
 export interface DecisionGateViewProps {
@@ -80,6 +81,10 @@ export function DecisionGateView({
             <Row label="Recorded">{new Date(decision.timestamp).toLocaleString()}</Row>
           </dl>
         </VisionSection>
+
+        {gate === "G0" && decision.decision === "go" && (
+          <EppmEntryCard journey={journey} useCaseFunction={selectedUseCase.function} />
+        )}
       </div>
     );
   }
@@ -88,7 +93,7 @@ export function DecisionGateView({
     <div className="space-y-4">
       <VisionSection
         title={`${gate} decision — awaiting human Go / No-go`}
-        description={`Decision authority: ${decider}. jarVision prepares and presents; the human decides.`}
+        description={`Decision authority: ${decider}. JARVISION prepares and presents; the human decides.`}
         icon={<ShieldAlert className="w-4 h-4 text-amber-500" />}
         right={<StageBadge label={`Awaiting ${gate} decision`} tone="amber" />}
       >
@@ -112,7 +117,7 @@ export function DecisionGateView({
             {gate === "G0"
               ? "No seed funding is released and no PoC starts until a human records an explicit Go."
               : "Nothing enters execution until a human records an explicit Go."}{" "}
-            jarVision never auto-approves.
+            JARVISION never auto-approves.
           </p>
         </div>
 
@@ -170,6 +175,51 @@ export function DecisionGateView({
         </fieldset>
       </VisionSection>
     </div>
+  );
+}
+
+/**
+ * Post-G0 ePPM entry (per PMI ITPM guidance). A candidate that passes G0 must
+ * be recorded in ePPM — the exclusive system for the project portfolio — where
+ * the Portfolio Manager confirms the G0 gate, the seed-fund release is logged,
+ * and the G0 DISD Submission is uploaded to the Documents tab. This button
+ * links to a pre-filled (simulated) ePPM new-entry.
+ */
+function EppmEntryCard({
+  journey,
+  useCaseFunction,
+}: {
+  journey: Journey;
+  useCaseFunction: string;
+}) {
+  const url = eppmEntryUrl(journey.techName, useCaseFunction);
+  return (
+    <VisionSection
+      title="Enter this project in ePPM"
+      description="G0 passed — the candidate now needs an ePPM record. The Portfolio Manager confirms G0 there."
+      icon={<ExternalLink className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
+    >
+      <div className="rounded-xl bg-muted p-3 mb-3">
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          ePPM is PMI's exclusive system for the project portfolio — the project's "front page". Seed the
+          minimum record (Details, Schedule, Benefits &amp; Costs, Risks, and the G0 DISD Submission in
+          Documents) so the Portfolio Manager can confirm the G0 gate. Keeping ePPM updated is a
+          prerequisite for every later mandatory gate.
+        </p>
+      </div>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-gradient-to-br from-blue-600 to-blue-500 dark:from-blue-500 dark:to-blue-400 text-white hover:from-blue-700 hover:to-blue-600 shadow-sm hover:shadow-md hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-400/40"
+      >
+        <ExternalLink className="w-3.5 h-3.5" />
+        Create ePPM entry
+      </a>
+      <p className="text-[10px] text-muted-foreground mt-2">
+        Simulated link · opens a pre-filled ePPM new-entry form in a new tab.
+      </p>
+    </VisionSection>
   );
 }
 
