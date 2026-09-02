@@ -27,6 +27,18 @@ const AGENTIC_AI: Journey = {
     "goal-driven",
     "multi-agent",
   ],
+  executiveSummary: {
+    fit: "Agentic AI extends PMI's existing AI momentum from single-shot assistants to goal-driven agents that can perceive, reason and act across systems — directly reinforcing the Project Management Excellence and operational-efficiency pillars.",
+    alreadyAdopted: [
+      "Platypus orchestration platform (internal)",
+      "Jarvis AI assistant for individual productivity",
+      "Responsible-AI governance guild & PoC playbook",
+    ],
+    opportunity:
+      "Collapse multi-tab, multi-step SaaS work into supervised natural-language workflows — freeing PMs and operators for higher-value judgement while keeping humans in the loop.",
+    useCaseSummary:
+      "5 candidate functions explored — from an ePPM gate-document agent to consumer-care resolvers, supply-chain planners, security monitors and SRC retail support.",
+  },
   targetFunctions: [
     "Project Management Excellence (ePPM)",
     "Commercial / Consumer Care",
@@ -56,6 +68,89 @@ const AGENTIC_AI: Journey = {
       projectClashes: [
         "Overlaps with Platypus and Jarvis — must be positioned as an extension, not a duplicate.",
       ],
+      riskItems: [
+        {
+          id: "risk-eppm-autonomy",
+          title: "Autonomy off the rails — a poorly designed goal leads to unintended actions",
+          severity: "high",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Keep the agent read-only for gate documents in the PoC; no autonomous writes to systems of record.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Human-in-the-loop approval on every action, bounded tool scopes, and a hard stop / kill-switch.", residualSeverity: "medium" },
+            { technique: "transference", strategy: "Run on the vendor's guardrailed runtime with contractual safety SLAs.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept residual risk for low-impact drafting tasks with monitoring only.", residualSeverity: "high" },
+          ],
+        },
+        {
+          id: "risk-eppm-cascade",
+          title: "Cascading failures across multiple coordinated agents",
+          severity: "high",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Start single-agent; defer multi-agent orchestration until stability is proven.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Circuit-breakers, per-agent rate limits and blast-radius isolation between agents.", residualSeverity: "medium" },
+            { technique: "transference", strategy: "Lean on the orchestration platform's fault-isolation guarantees.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept in a sandboxed PoC where failures have no production impact.", residualSeverity: "medium" },
+          ],
+        },
+        {
+          id: "risk-eppm-transparency",
+          title: "Transparency & explainability of agent decisions is hard to guarantee",
+          severity: "medium",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Restrict to tasks where a full decision trace is producible.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Full audit logging, step traces and rationale capture on every action.", residualSeverity: "low" },
+            { technique: "transference", strategy: "Adopt vendor observability tooling with attestations.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept limited explainability for non-material drafting outputs.", residualSeverity: "medium" },
+          ],
+        },
+        {
+          id: "risk-eppm-roi",
+          title: "ROI is indirect and may not materialize short-term",
+          severity: "medium",
+          recommendedTechnique: "acceptance",
+          mitigations: [
+            { technique: "avoidance", strategy: "Only proceed if a measurable PM-hours-saved hypothesis is agreed up front.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Instrument baseline metrics and track hours-saved from day one.", residualSeverity: "low" },
+            { technique: "transference", strategy: "Structure a vendor deal with value-based / outcome pricing.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept a longer payback given the reusable foundation it creates.", residualSeverity: "medium" },
+          ],
+        },
+      ],
+      similarProjects: [
+        {
+          name: "Platypus (orchestration platform)",
+          status: "Live",
+          similarityScore: 84,
+          overlappingComponents: ["Agent orchestration runtime", "Tool/API connector layer", "Prompt/workflow registry"],
+          reusableComponents: ["Orchestration runtime", "Connector framework", "Guardrail policy engine"],
+        },
+        {
+          name: "Jarvis AI assistant",
+          status: "Live",
+          similarityScore: 61,
+          overlappingComponents: ["Conversational UI", "Task execution surface"],
+          reusableComponents: ["Chat UI components", "Auth & session layer"],
+        },
+        {
+          name: "ePPM gate-document templates",
+          status: "In use",
+          similarityScore: 47,
+          overlappingComponents: ["Gate document schemas"],
+          reusableComponents: ["DISD G0/G3 templates", "Portfolio data APIs"],
+        },
+      ],
+      costBasis: {
+        annualBenefitUsd: 1_100_000,
+        monthlyTokenUsd: 4_200,
+        complexity: 1,
+        defaults: {
+          vendor: { internalPeople: 2, contractors: 2, timelineMonths: 5 },
+          saas: { internalPeople: 2, contractors: 1, timelineMonths: 4 },
+          "in-house": { internalPeople: 4, contractors: 2, timelineMonths: 7 },
+        },
+      },
     },
     {
       id: "uc-consumer-care",
@@ -117,16 +212,63 @@ const AGENTIC_AI: Journey = {
       restructuringFlag: true,
       content:
         "Needs an agent-governance model (goal definition, guardrails, measurable feedback loops, Agent Ops). Possible light restructuring — a new 'Agent Ops / orchestration' ownership function. Cost centers on the orchestration platform + oversight.",
+      detail: {
+        headline: "A new agent-governance operating model",
+        magnitude: "high",
+        effort: "high",
+        timeframe: "6–18 mo",
+        effects: [
+          "Stand up an 'Agent Ops / orchestration' ownership function",
+          "Define goals, guardrails and measurable feedback loops",
+          "Portfolio-level policy for autonomous action",
+          "Cost centres on the orchestration platform + oversight",
+        ],
+        watchouts: ["Light org restructuring likely", "Clear accountability for agent decisions"],
+        metrics: [
+          { label: "New function", value: "Agent Ops" },
+          { label: "Governance", value: "Guardrails + audit" },
+        ],
+      },
     },
     {
       layer: "domain",
       content:
         "Agent identity & access control (per-agent identity), API/tool permissioning, audit logging. Solution patterns: conductor-and-workers vs. decentralized agents depending on workflow.",
+      detail: {
+        headline: "Agent identity, tooling & orchestration patterns",
+        magnitude: "high",
+        effort: "moderate",
+        timeframe: "3–9 mo",
+        effects: [
+          "Per-agent identity & access control",
+          "API / tool permissioning with least privilege",
+          "End-to-end audit logging of every action",
+          "Choose conductor-and-workers vs. decentralized agents",
+        ],
+        watchouts: ["1LoD security engagement is mandatory"],
+        metrics: [
+          { label: "Pattern", value: "Conductor / workers" },
+          { label: "Security", value: "Per-agent identity" },
+        ],
+      },
     },
     {
       layer: "individual",
       content:
         "Shift from 'doing tasks' to 'supervising agents' — humans define goals and review outputs.",
+      detail: {
+        headline: "From doing tasks to supervising agents",
+        magnitude: "moderate",
+        effort: "moderate",
+        timeframe: "Ongoing",
+        effects: [
+          "Humans define goals and review agent outputs",
+          "New oversight and escalation habits",
+          "'What to do when an agent gets stuck' playbooks",
+        ],
+        watchouts: ["Trust calibration & over-reliance on agents"],
+        metrics: [{ label: "Role shift", value: "Operator → supervisor" }],
+      },
     },
   ],
   readiness: [
@@ -198,6 +340,18 @@ const PHYSICAL_AI: Journey = {
     "smart factory",
     "autonomous fleet",
   ],
+  executiveSummary: {
+    fit: "Physical AI brings PMI's AI strategy into the physical operation — robotics, digital twins and sensor-driven autonomy — extending value beyond knowledge work into manufacturing, warehousing and facilities.",
+    alreadyAdopted: [
+      "Plant sensor mesh & telemetry pipelines",
+      "Existing manufacturing automation / IoT programmes",
+      "Line-level digital-twin PoC (Manufacturing Technology)",
+    ],
+    opportunity:
+      "Simulation-first predictive maintenance and flexible automation that cut unplanned downtime and manual handling, with real-world risk contained by training in the digital twin before deployment.",
+    useCaseSummary:
+      "5 candidate functions explored — predictive-maintenance robotics, warehouse AMRs, vision QC, smart-shelf retail sensing and energy-optimised facilities.",
+  },
   targetFunctions: [
     "Manufacturing / Operations",
     "Supply Chain / Warehousing",
@@ -229,6 +383,70 @@ const PHYSICAL_AI: Journey = {
       projectClashes: [
         "Overlaps with existing manufacturing automation / IoT initiatives — capability-overlap check required.",
       ],
+      riskItems: [
+        {
+          id: "risk-mfg-safety",
+          title: "Real-world safety stakes — autonomous physical action near people",
+          severity: "critical",
+          recommendedTechnique: "avoidance",
+          mitigations: [
+            { technique: "avoidance", strategy: "Simulation-first; constrain the real-world pilot to a fenced, human-free cell.", residualSeverity: "medium" },
+            { technique: "reduction", strategy: "Hardware e-stops, safety-rated sensors, speed limits and 1LoD safety sign-off.", residualSeverity: "medium" },
+            { technique: "transference", strategy: "Vendor safety certification + liability insurance for the robotics deployment.", residualSeverity: "high" },
+            { technique: "acceptance", strategy: "Not acceptable un-mitigated — safety risk cannot simply be accepted.", residualSeverity: "critical" },
+          ],
+        },
+        {
+          id: "risk-mfg-sim2real",
+          title: "Sim-to-real gap — models overfit to synthetic data",
+          severity: "high",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Only automate tasks where the twin is high-fidelity; defer the rest.", residualSeverity: "medium" },
+            { technique: "reduction", strategy: "Domain randomisation, real-world fine-tuning and staged validation gates.", residualSeverity: "medium" },
+            { technique: "transference", strategy: "Use a vendor world-foundation-model with transfer guarantees.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept lower accuracy on edge cases with human oversight.", residualSeverity: "high" },
+          ],
+        },
+        {
+          id: "risk-mfg-capex",
+          title: "High capex and expensive real robot-interaction data",
+          severity: "high",
+          recommendedTechnique: "transference",
+          mitigations: [
+            { technique: "avoidance", strategy: "Rent/lease robotics for the PoC rather than purchasing.", residualSeverity: "medium" },
+            { technique: "reduction", strategy: "Reuse the existing sensor mesh; stage capex against proven milestones.", residualSeverity: "medium" },
+            { technique: "transference", strategy: "Vendor robotics-as-a-service shifts capex to opex.", residualSeverity: "low" },
+            { technique: "acceptance", strategy: "Accept capex if downtime-savings business case clears the hurdle rate.", residualSeverity: "high" },
+          ],
+        },
+      ],
+      similarProjects: [
+        {
+          name: "Manufacturing automation / IoT programme",
+          status: "Live",
+          similarityScore: 71,
+          overlappingComponents: ["PLC / line control", "Predictive-maintenance rules", "Sensor telemetry"],
+          reusableComponents: ["Sensor mesh & telemetry pipelines", "Historian data", "Edge gateways"],
+        },
+        {
+          name: "Line-level digital-twin PoC",
+          status: "In PoC",
+          similarityScore: 66,
+          overlappingComponents: ["Digital-twin model of the line"],
+          reusableComponents: ["Twin simulation environment", "Calibration dataset"],
+        },
+      ],
+      costBasis: {
+        annualBenefitUsd: 1_600_000,
+        monthlyTokenUsd: 2_600,
+        complexity: 1.6,
+        defaults: {
+          vendor: { internalPeople: 3, contractors: 3, timelineMonths: 8 },
+          saas: { internalPeople: 3, contractors: 2, timelineMonths: 7 },
+          "in-house": { internalPeople: 5, contractors: 3, timelineMonths: 11 },
+        },
+      },
     },
     {
       id: "uc-warehousing",
@@ -280,16 +498,63 @@ const PHYSICAL_AI: Journey = {
       restructuringFlag: true,
       content:
         "Significant capex governance; safety & compliance oversight; likely restructuring — new roles around robotics/automation ops and simulation engineering. Highest org footprint of the three journeys.",
+      detail: {
+        headline: "Capex governance + robotics / automation ops",
+        magnitude: "transformational",
+        effort: "high",
+        timeframe: "12–24 mo",
+        effects: [
+          "New robotics / automation ops & simulation engineering roles",
+          "Heavy capex governance and staged investment",
+          "Safety & compliance oversight at the enterprise level",
+          "Highest organizational footprint of the three journeys",
+        ],
+        watchouts: ["Significant restructuring", "OT + physical-safety accountability"],
+        metrics: [
+          { label: "Org footprint", value: "Highest" },
+          { label: "Investment", value: "Capex-heavy" },
+        ],
+      },
     },
     {
       layer: "domain",
       content:
         "OT/physical safety, sensor/edge security, digital-twin data integrity. Solution patterns: hybrid control (simple algorithms for stability + learning models for perception/decision), world foundation models, domain randomization.",
+      detail: {
+        headline: "OT safety, edge security & digital-twin integrity",
+        magnitude: "high",
+        effort: "high",
+        timeframe: "6–18 mo",
+        effects: [
+          "Hybrid control: stability algorithms + learning perception",
+          "World foundation models & domain randomization",
+          "Sensor / edge security hardening",
+          "Digital-twin data integrity",
+        ],
+        watchouts: ["Sim-to-real gap", "Latency-sensitive control loops"],
+        metrics: [
+          { label: "Approach", value: "Simulation-first" },
+          { label: "Security", value: "OT / edge" },
+        ],
+      },
     },
     {
       layer: "individual",
       content:
         "New operational + safety competencies; simulation/robotics literacy for engineers and floor staff.",
+      detail: {
+        headline: "Robotics & simulation literacy on the floor",
+        magnitude: "moderate",
+        effort: "moderate",
+        timeframe: "6–12 mo",
+        effects: [
+          "New operational + safety competencies",
+          "Simulation / robotics literacy for engineers & floor staff",
+          "Human oversight of autonomous physical systems",
+        ],
+        watchouts: ["Change fatigue on the shop floor"],
+        metrics: [{ label: "Upskilling", value: "Engineers + floor" }],
+      },
     },
   ],
   readiness: [
@@ -362,6 +627,18 @@ const WICKED_INTELLIGENCE: Journey = {
     "agi",
     "problem framing",
   ],
+  executiveSummary: {
+    fit: "Wicked Intelligence is a strategy lens, not a product — it points PMI's AI investment at the hard, previously-intractable problems where AI creates outsized value, rather than automating what humans already do well.",
+    alreadyAdopted: [
+      "Cross-portfolio prioritisation cadence",
+      "Innovation Office reframing workshops",
+      "Decision-science analytics community of practice",
+    ],
+    opportunity:
+      "A lightweight, repeatable problem-framing capability (#unthink / #unask / #unlearn) that feeds a shortlist of high-value candidates into the deeper adoption journeys — maximising return on scarce AI investment.",
+    useCaseSummary:
+      "5 candidate functions explored — portfolio triage, regulatory navigation, R&D design-space search, sustainability trade-offs and hyper-local SRC demand modelling.",
+  },
   targetFunctions: [
     "Portfolio / Strategy",
     "Regulatory / Scientific Affairs",
@@ -392,6 +669,58 @@ const WICKED_INTELLIGENCE: Journey = {
       projectClashes: [
         "Complements rather than clashes — acts as an upstream lens that feeds candidates into Journeys A and B and the wider portfolio.",
       ],
+      riskItems: [
+        {
+          id: "risk-portfolio-ambiguity",
+          title: "Ambiguity — wicked problems are hard to scope and measure",
+          severity: "medium",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Only admit problems that pass a minimum framability bar.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Structured #unthink/#unask/#unlearn framing with explicit value hypotheses per problem.", residualSeverity: "low" },
+            { technique: "transference", strategy: "Bring in external facilitation expertise for the hardest problems.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept that some framed problems won't progress — treat as portfolio optioning.", residualSeverity: "medium" },
+          ],
+        },
+        {
+          id: "risk-portfolio-overpromise",
+          title: "Risk of over-promising toward 'AGI'-level outcomes",
+          severity: "medium",
+          recommendedTechnique: "avoidance",
+          mitigations: [
+            { technique: "avoidance", strategy: "Ban AGI framing; anchor every problem to a concrete, testable value hypothesis.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Leadership review gate on claims before candidates go downstream.", residualSeverity: "low" },
+            { technique: "transference", strategy: "External advisory board pressure-tests the ambition level.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept modest ambition where value is still clearly positive.", residualSeverity: "medium" },
+          ],
+        },
+      ],
+      similarProjects: [
+        {
+          name: "Cross-portfolio prioritisation cadence",
+          status: "Live",
+          similarityScore: 52,
+          overlappingComponents: ["Prioritisation scoring", "Portfolio intake"],
+          reusableComponents: ["Scoring rubric", "Portfolio backlog", "Governance cadence"],
+        },
+        {
+          name: "Innovation reframing workshops",
+          status: "Live",
+          similarityScore: 44,
+          overlappingComponents: ["Facilitation format"],
+          reusableComponents: ["Workshop templates", "Facilitator pool"],
+        },
+      ],
+      costBasis: {
+        annualBenefitUsd: 520_000,
+        monthlyTokenUsd: 1_100,
+        complexity: 0.6,
+        defaults: {
+          vendor: { internalPeople: 1, contractors: 1, timelineMonths: 3 },
+          saas: { internalPeople: 1, contractors: 0, timelineMonths: 2 },
+          "in-house": { internalPeople: 2, contractors: 1, timelineMonths: 4 },
+        },
+      },
     },
     {
       id: "uc-regulatory",
@@ -444,16 +773,58 @@ const WICKED_INTELLIGENCE: Journey = {
       restructuringFlag: false,
       content:
         "Governance = how PMI chooses wicked problems and allocates AI investment; likely no structural change — more a decision-making/curiosity ritual than a new org unit.",
+      detail: {
+        headline: "A decision ritual, not a new org unit",
+        magnitude: "low",
+        effort: "low",
+        timeframe: "1–3 mo",
+        effects: [
+          "Shapes how PMI chooses wicked problems & allocates AI investment",
+          "A recurring curiosity / decision-making cadence",
+          "No new structural unit required",
+        ],
+        watchouts: ["Avoid it becoming a talk-shop with no output"],
+        metrics: [
+          { label: "Structure", value: "No change" },
+          { label: "Cadence", value: "Framing ritual" },
+        ],
+      },
     },
     {
       layer: "domain",
       content:
         "Depends on the chosen problem; solution = a repeatable problem-framing method (#unthink/#unask/#unlearn) rather than a fixed tech stack.",
+      detail: {
+        headline: "A repeatable problem-framing method",
+        magnitude: "moderate",
+        effort: "low",
+        timeframe: "1–3 mo",
+        effects: [
+          "#unthink / #unask / #unlearn framing",
+          "A method rather than a fixed tech stack",
+          "Feeds scored candidates into deeper journeys",
+        ],
+        watchouts: ["Concrete tech stack depends on the chosen problem"],
+        metrics: [{ label: "Output", value: "Scored shortlist" }],
+      },
     },
     {
       layer: "individual",
       content:
         "Curiosity, critical thinking, problem reframing, 'unlearning' assumptions — the human capability Voegele highlights.",
+      detail: {
+        headline: "Curiosity, reframing & 'unlearning'",
+        magnitude: "moderate",
+        effort: "moderate",
+        timeframe: "Ongoing",
+        effects: [
+          "Critical thinking & problem reframing",
+          "'Unlearning' entrenched assumptions",
+          "Hypothesis design & AI-literacy to know what's now solvable",
+        ],
+        watchouts: ["Requires senior facilitation to land"],
+        metrics: [{ label: "Capability", value: "Reframing" }],
+      },
     },
   ],
   readiness: [
@@ -587,6 +958,13 @@ export const CHANGE_DRIVERS: Record<string, ChangeDriver[]> = {
       role: "Cross-functional community of practice",
       team: "Enterprise Architecture",
       isTeam: true,
+      members: [
+        { name: "Lena Fischer", role: "Guild Lead / Enterprise Architect" },
+        { name: "Arjun Desai", role: "Responsible-AI Governance Specialist" },
+        { name: "Chloe Bernard", role: "Prompt & Agent Patterns SME" },
+        { name: "Marcus Webb", role: "PoC Facilitation Coach" },
+        { name: "Yuki Tanaka", role: "ML Engineer / Community Contributor" },
+      ],
       skills: ["Responsible-AI governance", "Prompt/agent patterns", "PoC facilitation"],
       rationale: "Already piloting internal AI assistants — a ready-made coalition to drive rollout.",
       matchScore: 82,
@@ -626,6 +1004,12 @@ export const CHANGE_DRIVERS: Record<string, ChangeDriver[]> = {
       role: "Sensor / edge infrastructure",
       team: "Supply Chain Technology",
       isTeam: true,
+      members: [
+        { name: "Diego Ramos", role: "Edge Platform Lead" },
+        { name: "Ingrid Larsen", role: "Sensor Integration Engineer" },
+        { name: "Kwame Mensah", role: "Telemetry / Data Pipeline Engineer" },
+        { name: "Sara Kim", role: "Edge Reliability Engineer" },
+      ],
       skills: ["Edge compute", "Sensor integration", "Telemetry pipelines"],
       rationale: "Maintains the plant sensor mesh the twin would learn from.",
       matchScore: 79,
@@ -665,6 +1049,12 @@ export const CHANGE_DRIVERS: Record<string, ChangeDriver[]> = {
       role: "Analytics community of practice",
       team: "Data & Analytics",
       isTeam: true,
+      members: [
+        { name: "Nadia Haddad", role: "Guild Lead / Decision Scientist" },
+        { name: "Oliver Grant", role: "Optimisation Modeller" },
+        { name: "Fatima Zahra", role: "Scenario & Simulation Analyst" },
+        { name: "Ben Carter", role: "Value-Hypothesis Analyst" },
+      ],
       skills: ["Multi-objective optimisation", "Scenario modelling", "Value hypotheses"],
       rationale: "Can pressure-test framed problems and estimate expected value.",
       matchScore: 78,
@@ -675,6 +1065,25 @@ export const CHANGE_DRIVERS: Record<string, ChangeDriver[]> = {
 /** Look up recommended change drivers for a journey (mock org scan). */
 export function getChangeDrivers(journeyId: string): ChangeDriver[] {
   return CHANGE_DRIVERS[journeyId] ?? [];
+}
+
+/**
+ * Base URL for the (simulated) enterprise Project & Portfolio Management system
+ * (ePPM). Per PMI ITPM guidance, a candidate that passes G0 is recorded in
+ * ePPM by the Portfolio Manager — this is where the seed-fund release and gate
+ * decision are logged. This link is illustrative for the prototype.
+ */
+export const EPPM_BASE_URL = "https://eppm.pmi.example/portfolio/new";
+
+/** Build a pre-filled (simulated) ePPM new-entry link for a G0-approved candidate. */
+export function eppmEntryUrl(techName: string, useCaseFunction: string): string {
+  const params = new URLSearchParams({
+    source: "JARVISION",
+    tech: techName,
+    function: useCaseFunction,
+    gate: "G0",
+  });
+  return `${EPPM_BASE_URL}?${params.toString()}`;
 }
 
 /** Scripted proactive trend nudges surfaced in Jarvis (FR-13.1). */

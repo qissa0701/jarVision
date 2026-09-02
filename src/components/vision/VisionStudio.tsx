@@ -66,7 +66,7 @@ export function VisionStudio({
           </div>
           <div className="min-w-0">
             <p className="text-sm font-bold leading-tight bg-gradient-to-r from-blue-700 to-sky-500 dark:from-blue-300 dark:to-sky-300 bg-clip-text text-transparent">
-              jarVision
+              JARVISION
             </p>
             <p className="text-[11px] text-muted-foreground leading-tight truncate">
               Emerging Tech Adoption Simulator

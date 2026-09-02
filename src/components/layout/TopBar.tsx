@@ -89,11 +89,11 @@ export function TopBar({
         <button
           type="button"
           onClick={onEnterVision}
-          aria-label="Enter jarVision"
+          aria-label="Enter JARVISION"
           className="hidden sm:inline-flex items-center gap-1.5 h-9 pl-2.5 pr-3.5 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-400/30 text-blue-700 dark:text-blue-300 bg-blue-50/60 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors"
         >
           <Eye className="w-4 h-4" />
-          jarVision
+          JARVISION
         </button>
         {/* Jarvis chat toggle. Styled as a filled, gradient "brand" pill
             (rather than a plain icon button like the theme/bell toggles) so

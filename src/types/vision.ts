@@ -45,6 +45,83 @@ export type JourneyStage =
   | "complete" // G3 "Go" recorded → handed to delivery (VISION stops here)
   | "rejected"; // No-go recorded at G0 or G3
 
+/** Qualitative severity band for a risk. */
+export type RiskSeverity = "low" | "medium" | "high" | "critical";
+
+/**
+ * The four canonical risk-response techniques VISION lets a user explore per
+ * risk: avoidance (stop the risky activity), reduction (add controls to lessen
+ * likelihood/impact), transference (shift the risk via insurance/contract), and
+ * acceptance (acknowledge a low or costly-to-fix risk and monitor it).
+ */
+export type MitigationTechnique = "avoidance" | "reduction" | "transference" | "acceptance";
+
+/** One explorable mitigation option for a risk, tied to a technique. */
+export interface RiskMitigation {
+  technique: MitigationTechnique;
+  /** What the strategy concretely does. */
+  strategy: string;
+  /** Residual severity once this strategy is applied. */
+  residualSeverity: RiskSeverity;
+}
+
+/** A single evaluated risk with severity and explorable mitigations (FR-4). */
+export interface RiskItem {
+  id: string;
+  title: string;
+  /** Likelihood × impact rolled into one severity band. */
+  severity: RiskSeverity;
+  /** The mitigation strategies a user can explore, one per technique family. */
+  mitigations: RiskMitigation[];
+  /** Which technique VISION recommends first. */
+  recommendedTechnique: MitigationTechnique;
+}
+
+/**
+ * A pre-existing PMI project this use case resembles — used for the candidate
+ * similarity score, overlap detection, and reuse opportunities (duplicate
+ * check). Illustrative demo data.
+ */
+export interface SimilarProject {
+  name: string;
+  /** Short status descriptor, e.g. "Live", "In PoC", "Sunset". */
+  status: string;
+  /** 0–100 similarity to this use case. */
+  similarityScore: number;
+  /** Capabilities that overlap / risk duplication. */
+  overlappingComponents: string[];
+  /** Components/assets that could be reused rather than rebuilt. */
+  reusableComponents: string[];
+}
+
+/** How a candidate could be delivered — drives the cost-benefit scenarios. */
+export type ImplementationApproach = "vendor" | "saas" | "in-house";
+
+/** One priced line in a cost breakdown (one-time or recurring). */
+export interface CostLineItem {
+  label: string;
+  amountUsd: number;
+  note?: string;
+}
+
+/**
+ * Per-use-case economic basis the cost-benefit calculator builds scenarios
+ * from. All figures indicative / simulated.
+ */
+export interface UseCaseCostBasis {
+  /** Indicative annual gross benefit once fully realized (USD). */
+  annualBenefitUsd: number;
+  /** Production monthly LLM/inference (token) spend at baseline (USD). */
+  monthlyTokenUsd: number;
+  /** Relative build complexity (1 = baseline). Scales labour + integration. */
+  complexity: number;
+  /** Default team + timeline per approach (the calculator's starting point). */
+  defaults: Record<
+    ImplementationApproach,
+    { internalPeople: number; contractors: number; timelineMonths: number }
+  >;
+}
+
 // ─── Journey (pre-scripted seed data) ────────────────────────────────────────
 
 /** A candidate use case for a technology, with its scripted evaluation (FR-4). */
@@ -61,6 +138,55 @@ export interface UseCase {
   timeline: string;
   /** Potential clashes with existing projects. */
   projectClashes: string[];
+  /** Rich, explorable risks (severity + mitigations). Falls back to `risks`. */
+  riskItems?: RiskItem[];
+  /** Existing PMI projects this candidate resembles (duplicate/reuse check). */
+  similarProjects?: SimilarProject[];
+  /** Economic basis for the cost-benefit scenario explorer. */
+  costBasis?: UseCaseCostBasis;
+}
+
+/**
+ * A high-level executive summary shown atop the Adoption Path — how the tech
+ * fits PMI, what PMI already has, the opportunity, and a use-case digest.
+ */
+export interface ExecutiveSummary {
+  /** How the technology fits PMI's strategy / operating model. */
+  fit: string;
+  /** What PMI has already adopted / is already running that's relevant. */
+  alreadyAdopted: string[];
+  /** The headline opportunity. */
+  opportunity: string;
+  /** One-line digest of the candidate use cases. */
+  useCaseSummary: string;
+}
+
+/** How large the impact of a layer is. */
+export type ImpactMagnitude = "low" | "moderate" | "high" | "transformational";
+
+/** How much effort/change the layer demands. */
+export type ImpactEffort = "low" | "moderate" | "high";
+
+/** A small quick-stat shown on an impact layer card. */
+export interface ImpactMetric {
+  label: string;
+  value: string;
+}
+
+/** Richer, structured detail for an impact layer (drives the visual cards). */
+export interface ImpactLayerDetail {
+  /** One-line headline for the layer's impact. */
+  headline: string;
+  magnitude: ImpactMagnitude;
+  effort: ImpactEffort;
+  /** Indicative time horizon, e.g. "6–18 mo", "Ongoing". */
+  timeframe: string;
+  /** Key concrete effects / changes. */
+  effects: string[];
+  /** Dependencies or things to watch. */
+  watchouts?: string[];
+  /** Quick-stat chips. */
+  metrics?: ImpactMetric[];
 }
 
 /** One impact lens for a journey (FR-5). */
@@ -69,6 +195,8 @@ export interface ImpactLayer {
   content: string;
   /** Enterprise layer only: does the tech imply org restructuring? */
   restructuringFlag?: boolean;
+  /** Richer structured detail; falls back to a derivation from `content`. */
+  detail?: ImpactLayerDetail;
 }
 
 /** A human-readiness recommendation mapped to an affected role (FR-6). */
@@ -95,12 +223,20 @@ export interface ChangeDriver {
   team: string;
   /** Whether this entry represents a whole team rather than an individual. */
   isTeam?: boolean;
+  /** When `isTeam`, the members of the team and their roles (shown in a dropdown). */
+  members?: TeamMember[];
   /** Skills/experience that make them a fit — the "already has experience" signal. */
   skills: string[];
   /** One-line rationale for why VISION recommends them. */
   rationale: string;
   /** Rough fit score (0–100) shown as a match strength. */
   matchScore: number;
+}
+
+/** A member of a change-driver team, shown in the team's members dropdown. */
+export interface TeamMember {
+  name: string;
+  role: string;
 }
 
 /** A scripted cascade action item template pushed to an org role on approve (FR-7). */
@@ -140,6 +276,8 @@ export interface Journey {
   sourcePublisher: string;
   /** Keywords used by the chatbot to recognise a pasted article (FR-3.2). */
   matchKeywords: string[];
+  /** Executive summary shown atop the Adoption Path (opportunity framing). */
+  executiveSummary?: ExecutiveSummary;
   targetFunctions: string[];
   useCases: UseCase[];
   impactLayers: ImpactLayer[];
@@ -199,8 +337,16 @@ export interface VisionIdea {
   stage: JourneyStage;
   /** Function the user positioned the tech into (FR-4.4). */
   positionedFunction: string | null;
-  /** Recommended use case carried forward (FR-4.5). */
+  /**
+   * Primary use case carried forward (FR-4.5) — the "top" candidate the
+   * downstream lifecycle uses. Kept in sync with the first of selectedUseCaseIds.
+   */
   selectedUseCaseId: string | null;
+  /**
+   * All candidate use cases the user has picked (multi-select checkout). Humans
+   * can explore several; for the next steps only the top one is carried forward.
+   */
+  selectedUseCaseIds: string[];
   /** Cascade items created for this idea (FR-7.5 traceability). */
   cascadeItemIds: string[];
   g0PackGenerated: boolean;

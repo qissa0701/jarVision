@@ -13,8 +13,22 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { motion } from "motion/react";
-import { CheckCircle2, ClipboardList, Download, FileText, Loader2, Send } from "lucide-react";
-import type { Gate, Journey, PackSection } from "@/types/vision";
+import {
+  CheckCircle2,
+  ClipboardList,
+  CopyCheck,
+  Download,
+  FileText,
+  GitCompare,
+  Loader2,
+  Recycle,
+  Send,
+  ShieldCheck,
+  TriangleAlert,
+} from "lucide-react";
+import type { Gate, Journey, UseCase, VisionIdea } from "@/types/vision";
+import type { PackSection } from "@/types/vision";
+import { deriveSimilarProjects } from "@/lib/visionEconomics";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +42,8 @@ import { VisionSection, VisionButton, DraftBadge, StageBadge } from "./visionUi"
 export interface ReadinessPackViewProps {
   gate: Gate;
   journey: Journey;
+  /** The idea in progress — used for the pre-G0 duplicate check. */
+  idea?: VisionIdea;
   generated: boolean;
   /** Generate the pack (marks it assembled). */
   onGenerate: () => void;
@@ -66,6 +82,7 @@ function teamForSection(section: PackSection): string {
 export function ReadinessPackView({
   gate,
   journey,
+  idea,
   generated,
   onGenerate,
   onSubmitForDecision,
@@ -76,11 +93,22 @@ export function ReadinessPackView({
 
   const [statuses, setStatuses] = useState<Record<string, DocStatus>>({});
   const [reviewing, setReviewing] = useState<PackSection | null>(null);
+  const [dupAcknowledged, setDupAcknowledged] = useState(false);
   const timers = useRef<number[]>([]);
+
+  // The primary candidate the duplicate check runs against.
+  const primaryUseCase: UseCase | undefined =
+    journey.useCases.find((u) => u.id === (idea?.selectedUseCaseId ?? journey.recommendedUseCaseId)) ??
+    journey.useCases[0];
+
+  // A pre-G0 duplicate check must be acknowledged before submitting for G0.
+  const needsDuplicateCheck = gate === "G0";
+  const canSubmit = !needsDuplicateCheck || dupAcknowledged;
 
   // Reset statuses when the pack (journey/gate) changes.
   useEffect(() => {
     setStatuses({});
+    setDupAcknowledged(false);
     timers.current.forEach((t) => window.clearTimeout(t));
     timers.current = [];
   }, [journey.id, gate]);
@@ -160,7 +188,7 @@ export function ReadinessPackView({
         {!generated ? (
           <div className="rounded-xl bg-muted p-4 text-center">
             <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-              jarVision will assemble {sections.length} draft sections mapped to PMI's {gate} template
+              JARVISION will assemble {sections.length} draft sections mapped to PMI's {gate} template
               {gate === "G3"
                 ? ", including the SteerCo Stakeholder Agreement and DISD G3 Decision Sheet"
                 : ""}
@@ -224,16 +252,29 @@ export function ReadinessPackView({
               </p>
             </div>
 
+            {needsDuplicateCheck && primaryUseCase && (
+              <PreG0DuplicateCheck
+                useCase={primaryUseCase}
+                acknowledged={dupAcknowledged}
+                onAcknowledge={() => setDupAcknowledged(true)}
+              />
+            )}
+
             <div className="mt-4 flex flex-wrap gap-2">
               <VisionButton variant="ghost" onClick={handleExport}>
                 <Download className="w-3.5 h-3.5" />
                 Export / hand off
               </VisionButton>
-              <VisionButton onClick={onSubmitForDecision}>
+              <VisionButton onClick={onSubmitForDecision} disabled={!canSubmit}>
                 <Send className="w-3.5 h-3.5" />
                 {submitLabel}
               </VisionButton>
             </div>
+            {needsDuplicateCheck && !canSubmit && (
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Complete the duplicate check above before submitting for the G0 decision.
+              </p>
+            )}
           </>
         )}
       </VisionSection>
@@ -283,6 +324,132 @@ export function ReadinessPackView({
           )}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+/**
+ * Pre-G0 duplicate check — scans the primary candidate against existing PMI
+ * projects for overlap/duplication before the G0 submission, surfacing reusable
+ * components. Must be acknowledged before submitting for the G0 decision, in the
+ * spirit of ePPM/LeanIX portfolio-conflict checks.
+ */
+function PreG0DuplicateCheck({
+  useCase,
+  acknowledged,
+  onAcknowledge,
+}: {
+  useCase: UseCase;
+  acknowledged: boolean;
+  onAcknowledge: () => void;
+}) {
+  const sims = deriveSimilarProjects(useCase);
+  const top = sims.reduce((m, s) => Math.max(m, s.similarityScore), 0);
+  const blocking = top >= 70;
+  const clear = sims.length === 0 || top < 45;
+
+  return (
+    <div className="mt-4 rounded-xl border border-border p-3">
+      <div className="flex items-center gap-1.5 mb-2">
+        <CopyCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+          Duplicate check · pre-G0
+        </p>
+        {sims.length > 0 && (
+          <span
+            className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              blocking
+                ? "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300"
+                : clear
+                  ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                  : "bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300"
+            }`}
+          >
+            top overlap {top}%
+          </span>
+        )}
+      </div>
+
+      {sims.length === 0 ? (
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          No overlapping PMI projects found in the portfolio — this candidate looks net-new.
+        </p>
+      ) : (
+        <>
+          <div
+            className={`flex items-start gap-2 rounded-lg p-2.5 mb-2 border ${
+              blocking
+                ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-400/30"
+                : "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-400/30"
+            }`}
+          >
+            <TriangleAlert
+              className={`w-4 h-4 flex-shrink-0 mt-0.5 ${blocking ? "text-red-600 dark:text-red-300" : "text-amber-600 dark:text-amber-300"}`}
+            />
+            <p className={`text-[11px] leading-relaxed ${blocking ? "text-red-800 dark:text-red-200" : "text-amber-800 dark:text-amber-200"}`}>
+              {blocking
+                ? "High overlap detected. Confirm this is positioned as an extension of the existing work (not a rebuild) and reuse the components below before submitting to G0."
+                : "Some overlap detected. Review the existing projects and note any components worth reusing before the G0 submission."}
+            </p>
+          </div>
+
+          <ul className="space-y-2">
+            {sims.map((s) => (
+              <li key={s.name} className="rounded-lg border border-border bg-muted/40 p-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold text-foreground leading-tight">{s.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{s.status}</p>
+                  </div>
+                  <span className="text-[10px] font-bold text-foreground tabular-nums flex-shrink-0">
+                    {s.similarityScore}% match
+                  </span>
+                </div>
+                {s.overlappingComponents.length > 0 && (
+                  <div className="mt-1.5 flex items-center gap-1 flex-wrap">
+                    <GitCompare className="w-3 h-3 text-amber-500" />
+                    {s.overlappingComponents.map((c) => (
+                      <span
+                        key={c}
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {s.reusableComponents.length > 0 && (
+                  <div className="mt-1 flex items-center gap-1 flex-wrap">
+                    <Recycle className="w-3 h-3 text-emerald-500" />
+                    {s.reusableComponents.map((c) => (
+                      <span
+                        key={c}
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <div className="mt-3">
+        {acknowledged ? (
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+            <ShieldCheck className="w-4 h-4" />
+            Duplicate check reviewed — cleared for G0 submission.
+          </span>
+        ) : (
+          <VisionButton onClick={onAcknowledge}>
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            {clear ? "Confirm no blocking duplicates" : "I've reviewed the overlaps — proceed"}
+          </VisionButton>
+        )}
+      </div>
     </div>
   );
 }

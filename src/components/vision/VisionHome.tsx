@@ -41,8 +41,8 @@ export function VisionHome({ vision, onOpenIdea, onStartJourney, onNewSimulation
         }
       >
         <p className="text-[11px] text-muted-foreground leading-relaxed">
-          jarVision never approves or funds anything — every gate (G0 and G3) is a human decision.
-          jarVision prepares, simulates, and tracks; humans decide.
+          JARVISION never approves or funds anything — every gate (G0 and G3) is a human decision.
+          JARVISION prepares, simulates, and tracks; humans decide.
         </p>
       </VisionSection>
 

@@ -136,7 +136,7 @@ function LoggedInApp({ role, onLogout }: LoggedInAppProps) {
     ).map((t) => ({
       id: `vision-${t.id}`,
       title: t.message,
-      detail: `Open jarVision · ${t.techName}`,
+      detail: `Open JARVISION · ${t.techName}`,
       kind: "info",
       target: null,
       visionJourneyId: t.journeyId,

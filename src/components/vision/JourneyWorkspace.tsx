@@ -193,7 +193,8 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
             journey={journey}
             idea={idea}
             onPositionFunction={(fn) => vision.positionFunction(idea.id, fn)}
-            onSelectUseCase={(uc) => vision.selectUseCase(idea.id, uc)}
+            onToggleUseCase={(uc) => vision.toggleUseCase(idea.id, uc)}
+            onSetPrimaryUseCase={(uc) => vision.setPrimaryUseCase(idea.id, uc)}
             onContinue={() => go("impact")}
           />
         )}
@@ -216,6 +217,7 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
           <ReadinessPackView
             gate="G0"
             journey={journey}
+            idea={idea}
             generated={idea.g0PackGenerated}
             onGenerate={() => vision.submitForG0(idea.id)}
             onSubmitForDecision={() => go("g0decision")}
@@ -268,7 +270,7 @@ function CompletionView({ journey, onBackToHome }: { journey: Journey; onBackToH
   return (
     <VisionSection
       title="Business case approved — handed to delivery"
-      description="jarVision's arc stops at the G3 boundary. Everything from G4 onward (Build, Go-Live, Deployment) is owned by the delivery team / DISD."
+      description="JARVISION's arc stops at the G3 boundary. Everything from G4 onward (Build, Go-Live, Deployment) is owned by the delivery team / DISD."
       icon={<PartyPopper className="w-4 h-4 text-emerald-500" />}
       right={<StageBadge label="Complete" tone="green" />}
     >
@@ -279,14 +281,14 @@ function CompletionView({ journey, onBackToHome }: { journey: Journey; onBackToH
         </div>
         <p className="text-[11px] text-muted-foreground leading-relaxed">
           Both human decision gates (G0 and G3) were recorded by a human. The seed-funded PoC produced
-          the evidence for a G3 business case, and DISD approved the pilot. jarVision never approved or
+          the evidence for a G3 business case, and DISD approved the pilot. JARVISION never approved or
           funded anything — it prepared, simulated, and tracked; the humans decided.
         </p>
       </div>
       <div className="mt-4">
         <VisionButton variant="ghost" onClick={onBackToHome}>
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to jarVision home
+          Back to JARVISION home
         </VisionButton>
       </div>
     </VisionSection>
