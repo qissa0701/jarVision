@@ -6,7 +6,8 @@
 // → recommended candidate → example cascade → G0 & G3 Readiness Pack drafts.
 // All figures are illustrative for demo purposes — there is no live LLM.
 
-import type { ChangeDriver, Journey, TrendNotification } from "@/types/vision";
+import type { ChangeDriver, Journey, TrendNotification, UseCase, VisionIdea } from "@/types/vision";
+import formaNovaImage from "@/assets/formanova-hero.png";
 
 // ─── Journey A — Agentic AI ──────────────────────────────────────────────────
 
@@ -874,18 +875,490 @@ const WICKED_INTELLIGENCE: Journey = {
   ],
 };
 
+// ─── Journey D — GPT-6 Astra ─────────────────────────────────────────────────
+
+const GPT_6_ASTRA: Journey = {
+  id: "gpt-6-astra",
+  techName: "GPT-6 Astra",
+  tagline:
+    "A frontier multimodal foundation model with native agentic tool-use, real-time voice/vision, a very long context window and always-on memory — a general reasoning engine you can point at almost any knowledge task.",
+  sourceTitle: "Introducing GPT-6 Astra: a real-time, agentic frontier model",
+  sourcePublisher: "OpenAI (illustrative)",
+  sourceUrl: "https://openai.com/index/gpt-6-astra",
+  matchKeywords: [
+    "gpt-6",
+    "gpt 6",
+    "gpt6",
+    "astra",
+    "frontier model",
+    "foundation model",
+    "multimodal",
+    "long context",
+    "real-time voice",
+    "agentic reasoning",
+  ],
+  executiveSummary: {
+    fit: "GPT-6 Astra moves PMI from task-specific AI assistants to a single frontier reasoning engine — real-time multimodal, long-context and agentic — that can be pointed at knowledge work across the whole portfolio, reinforcing the Project Management Excellence and enterprise-productivity pillars.",
+    alreadyAdopted: [
+      "Jarvis AI assistant for individual productivity",
+      "Enterprise RAG / knowledge-base search PoC",
+    ],
+    opportunity:
+      "Consolidate a sprawl of narrow AI tools onto one governed frontier model — real-time voice/vision copilots, long-context document reasoning and always-on memory — cutting per-tool licensing while keeping a human in the loop on every material action.",
+    useCaseSummary:
+      "5 candidate functions explored — an ePPM knowledge copilot, real-time consumer-care voice agent, regulatory long-context reviewer, R&D literature synthesiser and multimodal SRC field assistant.",
+  },
+  targetFunctions: [
+    "Project Management Excellence (ePPM)",
+    "Commercial / Consumer Care",
+    "Regulatory / Scientific Affairs",
+    "R&D",
+    "Product Design & Engineering (FormaNova)",
+    "SRC retail network",
+  ],
+  useCases: [
+    {
+      id: "uc-eppm-copilot",
+      function: "Project Management Excellence (ePPM)",
+      description:
+        "A long-context reasoning copilot that ingests an entire portfolio's gate documents, status reports and meeting notes to answer questions, surface conflicts and draft G-gate paperwork — grounded in retrieval with citations.",
+      opportunities: [
+        "Reason over an entire portfolio in one long-context window",
+        "Draft gate documents grounded in cited source material",
+        "Real-time voice Q&A over project state in reviews",
+        "Consolidate several narrow AI tools onto one governed model",
+      ],
+      risks: [
+        "Hallucinated facts / fabricated citations in gate documents",
+        "Sensitive portfolio data sent to a frontier model provider",
+        "Over-reliance on model output without human verification",
+        "Cost unpredictability — token spend scales with context size",
+      ],
+      benefitCost: "PoC ~$70–100K OPEX; benefit via PM hours saved + faster, better-grounded gate cycles.",
+      timeline: "6-month PoC → G3.",
+      projectClashes: [
+        "Overlaps with the Jarvis assistant and the enterprise RAG PoC — must be positioned as the shared model layer beneath them, not a fourth silo.",
+      ],
+      riskItems: [
+        {
+          id: "risk-astra-hallucination",
+          title: "Hallucinated facts or fabricated citations in gate documents",
+          severity: "high",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Restrict the copilot to retrieval-grounded answers only; disable free-form generation for gate paperwork.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Mandatory citation-to-source linking, confidence flags and human sign-off before any document is filed.", residualSeverity: "low" },
+            { technique: "transference", strategy: "Use the vendor's grounded-generation / verified-answer feature with contractual accuracy SLAs.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept residual risk for low-stakes internal summaries with a visible 'AI draft' watermark.", residualSeverity: "medium" },
+          ],
+        },
+        {
+          id: "risk-astra-data-residency",
+          title: "Sensitive portfolio & personal data sent to a frontier model provider",
+          severity: "high",
+          recommendedTechnique: "transference",
+          mitigations: [
+            { technique: "avoidance", strategy: "Keep the PoC to non-confidential, already-public project data only.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "PII redaction, data-classification gating and per-request logging before calls leave the tenancy.", residualSeverity: "medium" },
+            { technique: "transference", strategy: "Enterprise agreement with zero-retention, no-training-on-data terms and an in-region private deployment.", residualSeverity: "low" },
+            { technique: "acceptance", strategy: "Not acceptable un-mitigated for confidential data — must be contained first.", residualSeverity: "high" },
+          ],
+        },
+        {
+          id: "risk-astra-overreliance",
+          title: "Over-reliance on model output without human verification",
+          severity: "medium",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Position the copilot as advisory only; never let it be the system of record.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Human-in-the-loop review gates, spot-check audits and 'why did you say that?' trace views.", residualSeverity: "low" },
+            { technique: "transference", strategy: "Adopt vendor observability + evaluation tooling with attestations.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept for non-material drafting where a human always edits before use.", residualSeverity: "medium" },
+          ],
+        },
+        {
+          id: "risk-astra-cost",
+          title: "Cost unpredictability — token spend scales with long-context usage",
+          severity: "medium",
+          recommendedTechnique: "reduction",
+          mitigations: [
+            { technique: "avoidance", strategy: "Cap context size and disable the most expensive real-time modes in the PoC.", residualSeverity: "low" },
+            { technique: "reduction", strategy: "Prompt caching, retrieval instead of full-context stuffing, and per-team token budgets with alerts.", residualSeverity: "low" },
+            { technique: "transference", strategy: "Committed-use / capacity pricing with the vendor to fix the unit cost.", residualSeverity: "medium" },
+            { technique: "acceptance", strategy: "Accept variable spend during the PoC given the small pilot footprint.", residualSeverity: "medium" },
+          ],
+        },
+      ],
+      similarProjects: [
+        {
+          name: "Jarvis AI assistant",
+          status: "Live",
+          similarityScore: 74,
+          overlappingComponents: ["Conversational UI", "Model gateway", "Prompt/workflow registry"],
+          reusableComponents: ["Chat UI components", "Auth & session layer", "Model routing gateway"],
+        },
+        {
+          name: "Enterprise RAG / knowledge-base search PoC",
+          status: "In PoC",
+          similarityScore: 69,
+          overlappingComponents: ["Retrieval pipeline", "Document embeddings", "Citation rendering"],
+          reusableComponents: ["Vector index", "Chunking pipeline", "Source-grounding UI"],
+        },
+        {
+          name: "ePPM gate-document templates",
+          status: "In use",
+          similarityScore: 48,
+          overlappingComponents: ["Gate document schemas"],
+          reusableComponents: ["DISD G0/G3 templates", "Portfolio data APIs"],
+        },
+      ],
+      costBasis: {
+        annualBenefitUsd: 1_400_000,
+        monthlyTokenUsd: 6_800,
+        complexity: 1.2,
+        defaults: {
+          vendor: { internalPeople: 2, contractors: 2, timelineMonths: 5 },
+          saas: { internalPeople: 2, contractors: 1, timelineMonths: 4 },
+          "in-house": { internalPeople: 4, contractors: 2, timelineMonths: 8 },
+        },
+      },
+    },
+    {
+      id: "uc-consumer-care-voice",
+      function: "Commercial / Consumer Care",
+      description:
+        "Real-time multimodal voice agent that handles consumer calls end-to-end — understands speech, reasons over account context and escalates to a human with full transcript.",
+      opportunities: ["Natural real-time voice resolution", "24/7 multilingual coverage", "Human escalation with full context"],
+      risks: ["Real-time latency & interruption handling", "Incorrect advice on regulated products", "Voice data privacy"],
+      benefitCost: "PoC ~$80–100K OPEX; benefit via reduced handle time and after-hours coverage.",
+      timeline: "6-month PoC.",
+      projectClashes: ["Overlaps with existing consumer-care automation and the agentic-AI resolver initiative."],
+    },
+    {
+      id: "uc-regulatory-review",
+      function: "Regulatory / Scientific Affairs",
+      description:
+        "Long-context reviewer that reads multi-market regulatory dossiers in one pass and flags gaps, inconsistencies and missing requirements with citations.",
+      opportunities: ["Whole-dossier reasoning in one context", "Fewer missed requirements", "Cited, checkable outputs"],
+      risks: ["Accuracy stakes are high", "Explainability & auditability requirements", "Model updates changing behaviour"],
+      benefitCost: "PoC ~$75–90K OPEX; benefit via faster, more thorough regulatory navigation.",
+      timeline: "6–9 month PoC.",
+      projectClashes: ["Feeds, rather than clashes with, regulatory programmes."],
+    },
+    {
+      id: "uc-rnd-synthesis",
+      function: "R&D",
+      description:
+        "Literature and patent synthesiser that reads across thousands of documents to summarise the design space and surface novel directions.",
+      opportunities: ["Broad literature synthesis beyond human search capacity", "Faster hypothesis generation"],
+      risks: ["Fabricated references", "IP / confidentiality exposure", "Validation burden"],
+      benefitCost: "PoC ~$70K OPEX; benefit via faster research cycles.",
+      timeline: "6-month PoC.",
+      projectClashes: ["Complements existing R&D tooling and the wicked-intelligence framing lens."],
+    },
+    {
+      id: "uc-formanova",
+      function: "Product Design & Engineering (FormaNova)",
+      description:
+        "FormaNova — a generative product-design copilot on GPT-6 Astra: describe a device in natural language (e.g. 'a repairable modular sensor hub with passive cooling') and it generates concept geometry, an exploded component view and a first-pass engineering spec. Describe it, generate it, engineer it.",
+      opportunities: [
+        "Text-to-concept: turn a natural-language brief into 3D concept geometry",
+        "Explores many form-factor / layout variants in minutes",
+        "Drafts a first-pass bill-of-materials and engineering spec",
+        "Bakes in constraints early — repairability, passive cooling, DFM",
+      ],
+      risks: [
+        "Generated geometry may be physically infeasible or non-manufacturable",
+        "IP / confidentiality exposure of proprietary design data",
+        "Over-trust in unvalidated concepts skipping proper engineering review",
+        "Design-tool (CAD/PLM) integration and file-format fidelity",
+      ],
+      benefitCost: "PoC ~$85–100K OPEX; benefit via compressed concept-to-prototype cycle time.",
+      timeline: "6–9 month PoC (concept generation first; CAD/PLM export later).",
+      projectClashes: [
+        "Overlaps with existing CAD/PLM and R&D tooling — must integrate as a concept front-end, not replace the engineering system of record.",
+      ],
+      image: formaNovaImage,
+      imageAlt:
+        "Generative product-design copilot turning the brief 'a repairable modular sensor hub with passive cooling' into an exploded 3D concept.",
+      // Nothing like a generative product-design copilot exists at PMI yet — net-new.
+      similarProjects: [],
+      meaningForPmi:
+        "For PMI, FormaNova compresses the fuzzy front-end of product design. An engineer or product manager describes a device in plain language and gets concept geometry, an exploded component view and a first-pass engineering spec in minutes — turning weeks of back-and-forth with CAD specialists into same-day exploration. PMI can test far more form-factor, repairability and cooling options before committing engineering effort, while humans stay the reviewers who validate and sign off every concept. It's a net-new capability: PMI has adopted AI for knowledge work, but nothing yet for generative product design.",
+      impactLayers: [
+        {
+          layer: "enterprise",
+          restructuringFlag: false,
+          content:
+            "No new org unit needed — FormaNova sits inside R&D / Product Engineering as a concept front-end to the existing CAD/PLM system of record. The real enterprise work is governance: IP ownership of AI-generated concepts and a data-classification policy for the proprietary design data that leaves the tenancy.",
+          detail: {
+            headline: "Design-data governance & CAD/PLM integration",
+            magnitude: "moderate",
+            effort: "moderate",
+            timeframe: "3–9 mo",
+            effects: [
+              "Position FormaNova as a concept front-end, not a replacement for the CAD/PLM system of record",
+              "IP-ownership & licensing policy for AI-generated geometry and specs",
+              "Data-classification policy for proprietary design data sent to the model",
+              "Tooling budget owned within R&D / Product Engineering",
+            ],
+            watchouts: ["Avoid duplicating existing CAD/PLM", "Clear IP ownership of generated concepts"],
+            metrics: [
+              { label: "Structure", value: "No major change" },
+              { label: "Integration", value: "CAD / PLM" },
+            ],
+          },
+        },
+        {
+          layer: "domain",
+          content:
+            "The core pattern is describe → generate → engineer: natural-language briefs become concept geometry and exploded views with manufacturability constraints (repairability, passive cooling, DFM) baked in early. The hard problems are physical feasibility of generated geometry, CAD/PLM export fidelity, and a mandatory engineering-review gate before any concept advances.",
+          detail: {
+            headline: "Concept generation grounded in manufacturability",
+            magnitude: "high",
+            effort: "moderate",
+            timeframe: "3–9 mo",
+            effects: [
+              "Text-to-concept geometry with exploded component views",
+              "Constraints baked in early — repairability, passive cooling, DFM",
+              "Export path to CAD/PLM with file-format fidelity",
+              "Engineering-review gate before a concept advances to development",
+            ],
+            watchouts: [
+              "Generated geometry may be physically infeasible or non-manufacturable",
+              "File-format fidelity on CAD/PLM export",
+            ],
+            metrics: [
+              { label: "Pattern", value: "Describe → generate → engineer" },
+              { label: "Guardrail", value: "Eng-review gate" },
+            ],
+          },
+        },
+        {
+          layer: "individual",
+          content:
+            "Designers shift from hand-building geometry to briefing and curating generated concepts; engineers shift from drafting to validating feasibility. New habits: prompt-craft for design intent, and critically reviewing an AI concept before trusting it.",
+          detail: {
+            headline: "From CAD modelling to briefing & curating concepts",
+            magnitude: "moderate",
+            effort: "moderate",
+            timeframe: "Ongoing",
+            effects: [
+              "Designers brief and curate rather than build geometry from scratch",
+              "New prompt-craft for design intent and constraints",
+              "Engineers validate feasibility instead of drafting first passes",
+              "Habit of critically reviewing AI concepts before trusting them",
+            ],
+            watchouts: ["Over-trust in unvalidated concepts", "Hands-on CAD skill atrophy"],
+            metrics: [{ label: "Role shift", value: "Modeller → curator" }],
+          },
+        },
+      ],
+      readiness: [
+        { id: "r-fn-1", type: "skill", role: "Design Engineer", description: "Prompt-craft for design intent & interpreting generated concept geometry" },
+        { id: "r-fn-2", type: "skill", role: "Mechanical Engineer", description: "Feasibility & design-for-manufacture review of AI-generated concepts" },
+        { id: "r-fn-3", type: "certification", role: "Solution Architect", description: "CAD/PLM integration & generative-design tooling" },
+        { id: "r-fn-4", type: "training", role: "Product Design Team", description: "The describe-generate-engineer workflow & when to trust (or reject) an AI concept" },
+        { id: "r-fn-5", type: "certification", role: "Enterprise / Governance Architect", description: "IP & confidentiality governance for AI-generated design data" },
+      ],
+      changeDrivers: [
+        {
+          id: "cd-fn-1",
+          name: "Elena Vasquez",
+          role: "Lead Industrial Designer",
+          team: "Product Design Studio",
+          skills: ["Concept exploration", "Generative / parametric design", "Design for manufacture"],
+          rationale: "Runs early concept exploration today — the natural owner to pilot describe-generate-engineer.",
+          matchScore: 92,
+        },
+        {
+          id: "cd-fn-2",
+          name: "Hiroshi Tanaka",
+          role: "Principal Mechanical Engineer",
+          team: "Product Engineering",
+          skills: ["DFM", "CAD/PLM", "Feasibility & tolerance review"],
+          rationale: "Owns feasibility sign-off — essential to keep generated concepts manufacturable.",
+          matchScore: 85,
+        },
+        {
+          id: "cd-fn-3",
+          name: "Digital Product Design Guild",
+          role: "Design-tech community of practice",
+          team: "Product Engineering",
+          isTeam: true,
+          members: [
+            { name: "Sofia Marchetti", role: "Guild Lead / Senior Designer" },
+            { name: "Raj Patel", role: "Generative-CAD SME" },
+            { name: "Anna Kowalski", role: "PLM Integration Engineer" },
+            { name: "Tom Becker", role: "Rapid-Prototyping Lead" },
+          ],
+          skills: ["Parametric / generative CAD", "PLM integration", "Prototyping"],
+          rationale: "Already experimenting with generative-CAD plugins — a ready-made coalition to drive rollout.",
+          matchScore: 80,
+        },
+        {
+          id: "cd-fn-4",
+          name: "Priya Nair",
+          role: "Cybersecurity Lead (1LoD)",
+          team: "Information Security",
+          skills: ["Data classification", "IP protection", "Zero-retention / residency controls"],
+          rationale: "Owns the controls needed to protect proprietary design data sent to a frontier model.",
+          matchScore: 74,
+        },
+      ],
+    },
+    {
+      id: "uc-src",
+      function: "SRC retail network",
+      description:
+        "Multimodal field assistant for toko kelontong owners — point a phone camera at a shelf and ask, in local language, what to reorder and how to merchandise.",
+      opportunities: ["Vision + voice storefront support in local languages", "Lower-literacy-friendly interface"],
+      risks: ["Connectivity & on-device constraints", "Data across 250K+ diverse stores", "Per-interaction cost at scale"],
+      benefitCost: "PoC ~$85–95K OPEX across pilot stores; benefit via reduced stockouts.",
+      timeline: "6–9 month PoC.",
+      projectClashes: ["Coordinate with existing SRC digitization programmes."],
+    },
+  ],
+  recommendedUseCaseId: "uc-eppm-copilot",
+  recommendationRationale:
+    "A long-context, retrieval-grounded ePPM knowledge copilot — highest strategic fit (consolidates Jarvis + the RAG PoC onto one governed model), clear productivity benefit, and a contained blast radius when kept advisory and citation-grounded.",
+  impactLayers: [
+    {
+      layer: "enterprise",
+      restructuringFlag: true,
+      content:
+        "Needs a frontier-model governance model — a single model gateway, data-classification policy for what may leave the tenancy, evaluation/monitoring and FinOps for token spend. Light restructuring likely: a central 'AI Platform / Model Ops' function that owns the shared model layer.",
+      detail: {
+        headline: "A frontier-model governance & platform layer",
+        magnitude: "high",
+        effort: "high",
+        timeframe: "6–18 mo",
+        effects: [
+          "Stand up a central AI Platform / Model Ops ownership function",
+          "One governed model gateway rather than many point tools",
+          "Data-classification policy for what may leave the tenancy",
+          "FinOps for token spend + evaluation & drift monitoring",
+        ],
+        watchouts: ["Vendor lock-in to one frontier provider", "Model-version changes altering behaviour"],
+        metrics: [
+          { label: "New function", value: "Model Ops" },
+          { label: "Governance", value: "Gateway + evals" },
+        ],
+      },
+    },
+    {
+      layer: "domain",
+      content:
+        "Retrieval-grounding to control hallucination, PII redaction and data-residency controls, prompt/response logging and evaluation harnesses. Solution patterns: RAG over long context, private/in-region deployment, prompt caching for cost.",
+      detail: {
+        headline: "Grounding, data controls & evaluation harnesses",
+        magnitude: "high",
+        effort: "moderate",
+        timeframe: "3–9 mo",
+        effects: [
+          "RAG grounding with citation-to-source linking",
+          "PII redaction + data-residency / zero-retention controls",
+          "Prompt/response logging and automated eval harnesses",
+          "Prompt caching & retrieval to contain token cost",
+        ],
+        watchouts: ["1LoD security + DPIA engagement is mandatory", "Grounding quality drives trust"],
+        metrics: [
+          { label: "Pattern", value: "RAG + long context" },
+          { label: "Hosting", value: "Private / in-region" },
+        ],
+      },
+    },
+    {
+      layer: "individual",
+      content:
+        "Shift from searching and drafting from scratch to prompting, verifying and editing AI output — with new habits around checking citations and knowing when not to trust the model.",
+      detail: {
+        headline: "From drafting to prompting, verifying & editing",
+        magnitude: "moderate",
+        effort: "moderate",
+        timeframe: "Ongoing",
+        effects: [
+          "Prompt-craft and grounded-question habits",
+          "Verifying citations before relying on an answer",
+          "Knowing the model's limits — when not to trust output",
+        ],
+        watchouts: ["Trust calibration & over-reliance", "Skill atrophy on core drafting"],
+        metrics: [{ label: "Role shift", value: "Author → editor" }],
+      },
+    },
+  ],
+  readiness: [
+    { id: "r-1", type: "skill", role: "Solution Architect", description: "RAG / long-context design, model gateway & grounding architecture" },
+    { id: "r-2", type: "skill", role: "Project Manager", description: "Prompt-craft, human-in-the-loop review & output verification" },
+    { id: "r-3", type: "certification", role: "Innovation Lead", description: "Cloud/AI practitioner (e.g. AWS AI Practitioner)" },
+    { id: "r-4", type: "certification", role: "Enterprise / Governance Architect", description: "Responsible-AI governance & frontier-model risk" },
+    { id: "r-5", type: "training", role: "People & Culture / L&D", description: "AI-literacy: prompting, verifying citations & knowing model limits" },
+  ],
+  cascade: [
+    { targetRole: "Project Manager (PM)", actionText: "Draft PoC plan + success criteria for the ePPM knowledge copilot", layerOrigin: "Adoption Path" },
+    { targetRole: "Solution Architect", actionText: "Design the model gateway + RAG grounding architecture and citation layer", layerOrigin: "Domain layer" },
+    { targetRole: "Security / 1LoD", actionText: "Define data-classification gating, PII redaction and logging before calls leave the tenancy", layerOrigin: "Domain layer" },
+    { targetRole: "Data Privacy Manager", actionText: "Run a DPIA; agree zero-retention / no-training terms and residency", layerOrigin: "Domain layer" },
+    { targetRole: "Finance / IT Finance", actionText: "Model PoC token cost + PM-hours-saved benefit; set FinOps budgets", layerOrigin: "Enterprise layer" },
+    { targetRole: "People & Culture / L&D", actionText: "Build AI-literacy upskilling (prompting, verifying, model limits)", layerOrigin: "Individual layer" },
+  ],
+  seedFundingIndicative: "$70–100K OPEX",
+  pocSuccessCriteria: [
+    "Gate-document drafting time reduced by target %",
+    "Zero un-cited claims in filed gate documents",
+    "PM satisfaction with grounded answers above threshold",
+  ],
+  pocKpis: [
+    { label: "Gate-doc drafting time saved", target: "≥ 30%" },
+    { label: "Answer grounding / citation rate", target: "≥ 95%" },
+    { label: "Projects piloted", target: "N live projects" },
+  ],
+  g0Pack: [
+    { id: "g0-value", title: "Benefit / Value Hypothesis", draft: "A grounded ePPM copilot reduces gate-document drafting time by X% while keeping every claim cited to a source." },
+    { id: "g0-experiment", title: "Experiment Definition (PoC/MVP)", draft: "PoC on N live projects using retrieval-grounded answers only; measure hours saved and citation rate over 6 months." },
+    { id: "g0-objectives", title: "Objectives & Key Deliverables", draft: "Stand up the model gateway + RAG grounding; integrate ePPM read APIs; deliver a copilot that drafts 3 gate documents with citations." },
+    { id: "g0-financials", title: "Indicative Financials", draft: "Initiation + execution estimate ~$70–100K OPEX; benefit via PM hours saved + faster, better-grounded gate cycles." },
+    { id: "g0-timeline", title: "Timeline & Milestones", draft: "6-month PoC → G3, with monthly checkpoints and a G1/G2 review midway." },
+    { id: "g0-risk", title: "Risk Assessment", draft: "High-attention — hallucination and data-residency are the primary risks; both contained via grounding + private deployment." },
+    { id: "g0-tech", title: "Technology & Architecture", draft: "Single governed model gateway; RAG over long context; buy-vs-build (extend Jarvis/RAG PoC vs. new build); prompt caching for cost." },
+    { id: "g0-security", title: "Initial Cybersecurity Assessment", draft: "Engage 1LoD — data-classification gating, PII redaction and per-request logging before calls leave the tenancy." },
+    { id: "g0-privacy", title: "Data Privacy (high-level)", draft: "Classify ePPM data the copilot reads; DPIA required; agree zero-retention / no-training-on-data terms and in-region residency." },
+  ],
+  g3Pack: [
+    { id: "g3-outcome", title: "Outcome (why invest?)", draft: "PoC validated grounded drafting time savings with a ≥95% citation rate, justifying a portfolio-wide pilot on a governed model layer." },
+    { id: "g3-deliverables", title: "Key Deliverables", draft: "Production ePPM copilot, shared model gateway, grounding/eval harness, Model Ops runbook and rollout plan." },
+    { id: "g3-financials", title: "Advanced Financials", draft: "Indicative NPV positive over 3 years once tool-consolidation savings are counted; Payback ~18 months; benefit split productivity + licensing consolidation." },
+    { id: "g3-benefits", title: "Benefits", draft: "Productivity (PM hours saved), foundation (reusable model layer), cost (consolidating narrow tools), risk-reduction (fewer un-grounded claims)." },
+    { id: "g3-tech", title: "Technology & Architecture", draft: "Matured Solution Outline, hosting decision (private/in-region), app-portfolio impact, ARB notes, final buy-vs-build and provider strategy." },
+    { id: "g3-impact", title: "Impact Assessments", draft: "1LoD/2LoD security sign-off + DPIA status (residency, retention) carried from the PoC." },
+    { id: "g3-steerco", title: "SteerCo Stakeholder Agreement", draft: "Draft Project Stakeholder Agreement for signature by portfolio + platform/eng leadership." },
+    { id: "g3-decision", title: "DISD G3 Decision Sheet", draft: "Draft decision sheet to be linked in ePPM for the DISD funding decision." },
+  ],
+};
+
 // ─── Exports ─────────────────────────────────────────────────────────────────
 
-/** The three seeded journeys, in library display order (FR-2.2). */
+/** The seeded journeys, in library display order (FR-2.2). */
 export const VISION_JOURNEYS: Journey[] = [
   AGENTIC_AI,
   PHYSICAL_AI,
   WICKED_INTELLIGENCE,
+  GPT_6_ASTRA,
 ];
 
 /** Look up a journey by id. */
 export function getJourney(id: string): Journey | undefined {
   return VISION_JOURNEYS.find((j) => j.id === id);
+}
+
+/**
+ * The use case the downstream lifecycle is grounded in — the idea's primary
+ * (top) candidate, falling back to the journey's recommended one. Used by the
+ * Impact and Human Readiness steps so their content matches the chosen use case.
+ */
+export function primaryUseCase(journey: Journey, idea?: Pick<VisionIdea, "selectedUseCaseId">): UseCase | undefined {
+  const id = idea?.selectedUseCaseId ?? journey.recommendedUseCaseId;
+  return journey.useCases.find((u) => u.id === id) ?? journey.useCases.find((u) => u.id === journey.recommendedUseCaseId);
 }
 
 /**
@@ -1060,6 +1533,52 @@ export const CHANGE_DRIVERS: Record<string, ChangeDriver[]> = {
       matchScore: 78,
     },
   ],
+  "gpt-6-astra": [
+    {
+      id: "cd-astra-1",
+      name: "Maya Rahardjo",
+      role: "Principal Solution Architect",
+      team: "Platform Engineering",
+      skills: ["Model gateway design", "RAG / long-context", "LLM tooling", "Grounding & evals"],
+      rationale: "Owns the Jarvis model gateway and the RAG PoC — the natural owner for a shared frontier-model layer.",
+      matchScore: 94,
+    },
+    {
+      id: "cd-astra-2",
+      name: "Daniel Okafor",
+      role: "Senior Project Manager",
+      team: "Project Management Excellence (ePPM)",
+      skills: ["Gate documentation", "Human-in-the-loop review", "Prompt-craft"],
+      rationale: "Runs G-gate reviews today; strongest fit to shape and validate a grounded ePPM copilot.",
+      matchScore: 87,
+    },
+    {
+      id: "cd-astra-3",
+      name: "Innovation & AI Guild",
+      role: "Cross-functional community of practice",
+      team: "Enterprise Architecture",
+      isTeam: true,
+      members: [
+        { name: "Lena Fischer", role: "Guild Lead / Enterprise Architect" },
+        { name: "Arjun Desai", role: "Responsible-AI Governance Specialist" },
+        { name: "Chloe Bernard", role: "Prompt & RAG Patterns SME" },
+        { name: "Marcus Webb", role: "PoC Facilitation Coach" },
+        { name: "Yuki Tanaka", role: "ML Engineer / Evaluation Contributor" },
+      ],
+      skills: ["Responsible-AI governance", "Prompt / RAG patterns", "Model evaluation"],
+      rationale: "Already piloting internal AI assistants — a ready-made coalition to drive rollout and evals.",
+      matchScore: 83,
+    },
+    {
+      id: "cd-astra-4",
+      name: "Priya Nair",
+      role: "Cybersecurity Lead (1LoD)",
+      team: "Information Security",
+      skills: ["Data classification", "PII redaction", "Zero-retention / residency controls"],
+      rationale: "Owns the data-handling standards needed to send portfolio data to a frontier model safely.",
+      matchScore: 77,
+    },
+  ],
 };
 
 /** Look up recommended change drivers for a journey (mock org scan). */
@@ -1099,5 +1618,11 @@ export const VISION_TRENDS: TrendNotification[] = [
     journeyId: "physical-ai",
     techName: "Physical AI",
     message: "Physical AI is trending — want to explore where it fits in PMI?",
+  },
+  {
+    id: "trend-astra",
+    journeyId: "gpt-6-astra",
+    techName: "GPT-6 Astra",
+    message: "GPT-6 Astra just dropped — want to simulate adopting a frontier model at PMI?",
   },
 ];

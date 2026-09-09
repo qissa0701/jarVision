@@ -28,11 +28,15 @@ import type {
   ImpactLayerKind,
   ImpactMagnitude,
   Journey,
+  VisionIdea,
 } from "@/types/vision";
+import { primaryUseCase } from "@/data/visionJourneys";
 import { VisionSection, VisionButton, StageBadge } from "./visionUi";
 
 export interface ImpactLayersViewProps {
   journey: Journey;
+  /** The idea in progress — used to ground impact layers in its primary use case. */
+  idea?: VisionIdea;
   onContinue: () => void;
 }
 
@@ -122,10 +126,15 @@ function detailFor(layer: ImpactLayer): ImpactLayerDetail {
   };
 }
 
-export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps) {
-  const [active, setActive] = useState<ImpactLayerKind | "compare">("enterprise");
+export function ImpactLayersView({ journey, idea, onContinue }: ImpactLayersViewProps) {
+  // Prefer the primary use case's own impact layers so the story stays grounded
+  // in the chosen candidate; fall back to the journey-level layers.
+  const uc = primaryUseCase(journey, idea);
+  const layers = uc?.impactLayers ?? journey.impactLayers;
 
-  const layerByKind = (k: ImpactLayerKind) => journey.impactLayers.find((l) => l.layer === k);
+  const [active, setActive] = useState<ImpactLayerKind | "compare" | null>("enterprise");
+
+  const layerByKind = (k: ImpactLayerKind) => layers.find((l) => l.layer === k);
 
   return (
     <div className="space-y-4">
@@ -149,7 +158,7 @@ export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps)
           </button>
         }
       >
-        {/* Visual impact stack — also the layer selector */}
+        {/* Visual impact stack — an accordion: click a band to expand its detail */}
         <div className="space-y-0">
           {LAYER_ORDER.map((kind, i) => {
             const layer = layerByKind(kind);
@@ -163,9 +172,33 @@ export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps)
                   detail={detail}
                   restructuring={layer.restructuringFlag}
                   selected={selected}
-                  dimmed={active !== "compare" && !selected}
-                  onSelect={() => setActive(kind)}
+                  dimmed={active !== "compare" && active !== null && !selected}
+                  onSelect={() => setActive((a) => (a === kind ? null : kind))}
                 />
+
+                {/* Inline expanded detail (the "dropdown") — opens under its band. */}
+                <AnimatePresence initial={false}>
+                  {selected && (
+                    <motion.div
+                      key={`${kind}-detail`}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-2 pb-1">
+                        <DetailCard
+                          kind={kind}
+                          content={layer.content}
+                          detail={detail}
+                          restructuring={layer.restructuringFlag}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 {i < LAYER_ORDER.length - 1 && (
                   <div className="flex justify-center py-1">
                     <ArrowDown className="w-3.5 h-3.5 text-muted-foreground/50" />
@@ -176,50 +209,25 @@ export function ImpactLayersView({ journey, onContinue }: ImpactLayersViewProps)
           })}
         </div>
 
-        {/* Detail region */}
-        <div className="mt-4">
-          {active === "compare" ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {LAYER_ORDER.map((kind) => {
-                const layer = layerByKind(kind);
-                if (!layer) return null;
-                return (
-                  <DetailCard
-                    key={kind}
-                    kind={kind}
-                    content={layer.content}
-                    detail={detailFor(layer)}
-                    restructuring={layer.restructuringFlag}
-                    compact
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <AnimatePresence mode="wait">
-              {(() => {
-                const layer = layerByKind(active);
-                if (!layer) return null;
-                return (
-                  <motion.div
-                    key={active}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <DetailCard
-                      kind={active}
-                      content={layer.content}
-                      detail={detailFor(layer)}
-                      restructuring={layer.restructuringFlag}
-                    />
-                  </motion.div>
-                );
-              })()}
-            </AnimatePresence>
-          )}
-        </div>
+        {/* Compare-all region — the three layers side by side. */}
+        {active === "compare" && (
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+            {LAYER_ORDER.map((kind) => {
+              const layer = layerByKind(kind);
+              if (!layer) return null;
+              return (
+                <DetailCard
+                  key={kind}
+                  kind={kind}
+                  content={layer.content}
+                  detail={detailFor(layer)}
+                  restructuring={layer.restructuringFlag}
+                  compact
+                />
+              );
+            })}
+          </div>
+        )}
       </VisionSection>
 
       <div className="flex justify-end">

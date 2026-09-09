@@ -398,6 +398,29 @@ function UseCaseNode({
           <BranchAnimated>
             <DelayedReveal label="Running evaluation…" delay={620}>
               <div className="rounded-xl border border-border bg-gradient-to-br from-card to-muted/40 p-3 space-y-3">
+                {uc.image && (
+                  <figure className="overflow-hidden rounded-xl border border-border">
+                    <img
+                      src={uc.image}
+                      alt={uc.imageAlt ?? `Illustrative concept for ${uc.function}`}
+                      className="w-full h-auto object-cover"
+                      loading="lazy"
+                    />
+                  </figure>
+                )}
+
+                {uc.meaningForPmi && (
+                  <div className="rounded-xl border border-blue-200 dark:border-blue-400/30 bg-gradient-to-br from-blue-50 to-blue-100/30 dark:from-blue-500/10 dark:to-blue-500/5 p-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Lightbulb className="w-3.5 h-3.5 text-blue-600 dark:text-blue-300" />
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                        What this means for PMI
+                      </p>
+                    </div>
+                    <p className="text-[11px] text-foreground leading-relaxed">{uc.meaningForPmi}</p>
+                  </div>
+                )}
+
                 <EvalList title="Opportunities" items={uc.opportunities} tone="green" />
 
                 <SimilarityPanel uc={uc} />

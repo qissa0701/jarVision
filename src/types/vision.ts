@@ -144,6 +144,20 @@ export interface UseCase {
   similarProjects?: SimilarProject[];
   /** Economic basis for the cost-benefit scenario explorer. */
   costBasis?: UseCaseCostBasis;
+  /** Optional illustrative image shown at the top of the use-case card. */
+  image?: string;
+  /** Alt text for `image` (accessibility). */
+  imageAlt?: string;
+  /** Short "what this means for PMI" framing shown on the use-case card. */
+  meaningForPmi?: string;
+  /**
+   * Optional use-case-specific overrides for the downstream simulation. When
+   * present, the Multi-layer Impact and Human Readiness steps use these instead
+   * of the journey-level defaults, so the story stays grounded in this use case.
+   */
+  impactLayers?: ImpactLayer[];
+  readiness?: ReadinessItem[];
+  changeDrivers?: ChangeDriver[];
 }
 
 /**

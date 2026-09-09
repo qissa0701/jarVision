@@ -309,7 +309,9 @@ function shorten(s: string): string {
  * the similarity / duplicate check always has something to show.
  */
 export function deriveSimilarProjects(uc: UseCase): SimilarProject[] {
-  if (uc.similarProjects && uc.similarProjects.length > 0) return uc.similarProjects;
+  // An explicitly-defined list is authoritative — even an empty one, which lets
+  // a use case declare itself net-new (nothing like it adopted at PMI yet).
+  if (uc.similarProjects) return uc.similarProjects;
 
   return uc.projectClashes.map((clash, i) => ({
     name: clashName(clash),

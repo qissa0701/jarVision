@@ -68,7 +68,7 @@ export function VisionHome({ vision, onOpenIdea, onStartJourney, onNewSimulation
 
       {/* Emerging tech library (FR-2.2) */}
       <VisionSection title="Emerging technologies" description="Seeded articles — pick one to run its pre-scripted journey.">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {VISION_JOURNEYS.map((j) => (
             <button
               key={j.id}

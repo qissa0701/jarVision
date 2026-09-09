@@ -19,12 +19,14 @@ import {
   Users,
   UserRound,
 } from "lucide-react";
-import type { ChangeDriver, Journey, ReadinessType } from "@/types/vision";
-import { getChangeDrivers } from "@/data/visionJourneys";
+import type { ChangeDriver, Journey, ReadinessItem, ReadinessType, VisionIdea } from "@/types/vision";
+import { getChangeDrivers, primaryUseCase } from "@/data/visionJourneys";
 import { VisionSection, VisionButton } from "./visionUi";
 
 export interface HumanReadinessViewProps {
   journey: Journey;
+  /** The idea in progress — used to ground readiness in its primary use case. */
+  idea?: VisionIdea;
   onContinue: () => void;
 }
 
@@ -44,7 +46,11 @@ const SCAN_STATUSES = [
   "Ranking potential change drivers…",
 ];
 
-export function HumanReadinessView({ journey, onContinue }: HumanReadinessViewProps) {
+export function HumanReadinessView({ journey, idea, onContinue }: HumanReadinessViewProps) {
+  // Prefer the primary use case's own readiness items when present.
+  const uc = primaryUseCase(journey, idea);
+  const readiness: ReadinessItem[] = uc?.readiness ?? journey.readiness;
+
   return (
     <div className="space-y-4">
       <VisionSection
@@ -53,7 +59,7 @@ export function HumanReadinessView({ journey, onContinue }: HumanReadinessViewPr
         icon={<Users className="w-4 h-4 text-blue-500 dark:text-blue-300" />}
       >
         <ul className="space-y-2">
-          {journey.readiness.map((r) => {
+          {readiness.map((r) => {
             const meta = TYPE_META[r.type];
             const Icon = meta.icon;
             return (
@@ -80,7 +86,7 @@ export function HumanReadinessView({ journey, onContinue }: HumanReadinessViewPr
         </p>
       </VisionSection>
 
-      <ChangeDriversFinder journey={journey} />
+      <ChangeDriversFinder journey={journey} idea={idea} />
 
       <div className="flex justify-end">
         <VisionButton onClick={onContinue}>
@@ -94,10 +100,12 @@ export function HumanReadinessView({ journey, onContinue }: HumanReadinessViewPr
 
 type ScanPhase = "idle" | "scanning" | "done";
 
-function ChangeDriversFinder({ journey }: { journey: Journey }) {
+function ChangeDriversFinder({ journey, idea }: { journey: Journey; idea?: VisionIdea }) {
   const [phase, setPhase] = useState<ScanPhase>("idle");
   const [statusIndex, setStatusIndex] = useState(0);
-  const drivers = getChangeDrivers(journey.id);
+  // Prefer the primary use case's own change drivers when present.
+  const uc = primaryUseCase(journey, idea);
+  const drivers = uc?.changeDrivers ?? getChangeDrivers(journey.id);
   const timers = useRef<number[]>([]);
 
   // Reset when the journey changes.

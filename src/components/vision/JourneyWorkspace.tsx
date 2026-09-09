@@ -138,10 +138,10 @@ export function JourneyWorkspace({ journey, idea, vision, onBackToHome }: Journe
               />
             )}
             {view === "impact" && (
-              <ImpactLayersView journey={journey} onContinue={() => go("readiness")} />
+              <ImpactLayersView journey={journey} idea={idea} onContinue={() => go("readiness")} />
             )}
             {view === "readiness" && (
-              <HumanReadinessView journey={journey} onContinue={() => go("cascade")} />
+              <HumanReadinessView journey={journey} idea={idea} onContinue={() => go("cascade")} />
             )}
             {view === "cascade" && (
               <CascadeView
